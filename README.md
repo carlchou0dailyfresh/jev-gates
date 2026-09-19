@@ -1,10 +1,12 @@
 # jev-gates
 
+**English** · [繁體中文](README.zh-TW.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Português (Brasil)](README.pt-BR.md)
+
 **Build complex decisions by composing small semantic judgments.**
 
 JEV answers focused questions; `jev-gates` turns those answers into explicit `TRUE`, `FALSE`, or `UNKNOWN` signals and connects them with ordinary logic. Build a circuit as JSON, reuse it inside a larger circuit, or feed earlier signals into a second semantic layer.
 
-[繁體中文](README.zh-TW.md) · [Circuit reference](docs/circuits.md) · [Architecture](docs/architecture.md) · [Evaluation guide](docs/evaluation.md)
+[Circuit reference](docs/circuits.md) · [Architecture](docs/architecture.md) · [Evaluation guide](docs/evaluation.md)
 
 Version 0.1.0. TypeScript, Node.js 22+, zero runtime dependencies, MIT. This is an independent, unofficial project; it is not maintained or endorsed by TypeSafe AI. The source is ready to run locally; these instructions do not assume an npm publication.
 

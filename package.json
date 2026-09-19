@@ -13,7 +13,7 @@
   "types": "./dist/index.d.ts",
   "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
   "bin": { "jev-gates": "./dist/cli.js" },
-  "files": ["dist", "examples", "docs", "README.md", "README.zh-TW.md", "LICENSE", "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md"],
+  "files": ["dist", "examples", "docs", "README*.md", "LICENSE", "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md"],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",

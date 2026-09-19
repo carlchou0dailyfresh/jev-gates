@@ -1,10 +1,14 @@
 # jev-gates
 
+[English](README.md) · **繁體中文** · [简体中文](README.zh-CN.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Português (Brasil)](README.pt-BR.md)
+
 **把小型語意判斷組成邏輯閘，再堆疊成更複雜的決策電路。**
 
 JEV 負責回答範圍明確的小問題；`jev-gates` 依照你設定的政策，把回答轉成 `TRUE`、`FALSE`、`UNKNOWN`，再交給程式組合。你可以用 JSON 定義電路、重用子電路，也可以把前一層的訊號傳給下一層 JEV。
 
-[English](README.md) · [電路格式](docs/circuits.md) · [架構](docs/architecture.md) · [評估方法](docs/evaluation.md)
+[電路格式](docs/circuits.md) · [架構](docs/architecture.md) · [評估方法](docs/evaluation.md)
+
+連結中的詳細技術文件目前使用英文。
 
 版本 0.1.0。TypeScript、Node.js 22 以上、沒有執行期套件依賴、MIT 授權。本專案獨立開發，非 TypeSafe AI 官方專案，也未取得其背書。目前可直接從原始碼執行，以下指令不假設已發布到 npm。
 
@@ -72,7 +76,7 @@ node dist/cli.js run examples/support-triage.json \
 
 TypeSafe 介接使用 [JEV API](https://docs.typesafe.ai/api)。JEV 接收文字或結構化文字資料，不能直接看截圖或操作滑鼠；畫面觀察要先由工具取得。詳見[模型文件](https://docs.typesafe.ai/models)。
 
-[LocalJev](https://github.com/githubnext/localjev) 用其他模型提供相容介面，其機率由模型生成。請分開測試 LocalJev 與官方 JEV 的校準、品質及延遲，不能直接沿用另一個模型的門檻。
+[LocalJev](https://github.com/githubnext/localjev) 用其他模型提供相容介面，其機率由模型生成。請分開測試 LocalJev 與官方 JEV 的校準、品質及延遲，不能直接沿用另一個模型的門檻。更換後端也可能改變判斷結果與成本。
 
 ## 當成程式庫使用
 
@@ -83,20 +87,20 @@ import { readFile } from 'node:fs/promises';
 import { MockProvider, runCircuit } from './dist/index.js';
 
 const readJson = async (path) => JSON.parse(await readFile(path, 'utf8'));
-const result = await runCircuit(
-  await readJson('examples/support-triage.json'),
-  await readJson('examples/support-input.json'),
-  {
-    provider: new MockProvider(await readJson('examples/support-answers.json')),
-    maxCalls: 16,
-    timeoutMs: 30_000,
-  },
-);
+const circuit = await readJson('examples/support-triage.json');
+const input = await readJson('examples/support-input.json');
+const answers = await readJson('examples/support-answers.json');
+
+const result = await runCircuit(circuit, input, {
+  provider: new MockProvider(answers),
+  maxCalls: 16,
+  timeoutMs: 30_000,
+});
 
 console.log(result.outputs.priority_queue.truth);
 ```
 
-把提供者換成 `TypeSafeProvider` 或 `LocalJevProvider` 就能明確啟用實際推論，也可以實作 `Provider` 介面。`validateCircuit()` 驗證電路，`toMermaid()` 產生電路圖，`mountCircuit(prefix, circuit)` 為子電路的節點與輸出加上命名空間，供較大電路重用。
+把提供者換成 `new TypeSafeProvider({ apiKey, model })` 或 `new LocalJevProvider({ baseUrl })` 就能明確啟用實際推論，也可以實作 `Provider` 介面。`validateCircuit()` 驗證電路，`toMermaid()` 產生電路圖，`mountCircuit(prefix, circuit)` 為子電路的節點與輸出加上命名空間，供較大電路重用。
 
 ## 可以組合哪些閘
 
@@ -125,4 +129,8 @@ node examples/controller.mjs
 
 使用模擬回答的測試不需要金鑰。實際推論會把選取的輸入與 context 傳給設定的服務；分享追蹤紀錄前請檢查內容，雜湊不等於匿名化。詳見 [SECURITY.md](SECURITY.md)。
 
-歡迎依 [CONTRIBUTING.md](CONTRIBUTING.md) 提交修改。CI 在 Node.js 22、24 執行離線測試與套件檢查；真實模型品質與外部工具仍需另行驗證。採 [MIT 授權](LICENSE)。
+## 參與貢獻
+
+歡迎依 [CONTRIBUTING.md](CONTRIBUTING.md) 提交修改。CI 在 Node.js 22、24 執行離線測試與套件檢查；真實模型品質、本地服務可用性與外部工具仍需另行驗證。
+
+採 [MIT 授權](LICENSE)。
