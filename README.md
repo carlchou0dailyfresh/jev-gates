@@ -1,5 +1,7 @@
 # jev-gates
 
+**New: JEV Studio** — a local interactive workbench with four synthetic scenarios, editable semantic gates and branches, LocalJev inference, and an Ollama language bridge. Run `npm ci`, `npm ci --prefix workbench`, then `npm run workbench:dev` (Node 22.12+), and open `http://127.0.0.1:3088`. [Workbench guide (繁體中文)](docs/workbench.md). Fixture results do not establish real JEV accuracy or AGI capabilities.
+
 **English** · [繁體中文](README.zh-TW.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Português (Brasil)](README.pt-BR.md)
 
 **Build complex decisions by composing small semantic judgments.**

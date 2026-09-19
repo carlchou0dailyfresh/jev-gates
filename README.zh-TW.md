@@ -29,6 +29,20 @@ flowchart LR
 
 ## 先跑離線範例
 
+### 用瀏覽器探索情境與判斷支線
+
+JEV Studio 提供四個合成工作情境，可編輯任務、證據、判斷問題、門檻與三條回覆支線，再用本機語言模型產生回覆草稿。工作台需要 Node.js 22.12 以上。
+
+```sh
+npm ci
+npm ci --prefix workbench
+npm run workbench:dev
+```
+
+開啟 `http://127.0.0.1:3088`。預設的固定示範分數不會理解文字；選用 LocalJev 才會向本機服務要求語意推論。LocalJev 是 JEV 相容橋接器，與 TypeSafe JEV 不同。所有情境皆為合成示例，沒有實際準確率或 AGI 的驗證主張。詳見[工作台使用說明](docs/workbench.md)。
+
+### 原有命令列範例
+
 下載專案後執行；已有本地專案時，可以直接從 `npm install` 開始：
 
 ```sh

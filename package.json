@@ -4,22 +4,62 @@
   "description": "Composable, three-valued semantic logic circuits powered by JEV.",
   "type": "module",
   "license": "MIT",
-  "repository": { "type": "git", "url": "git+https://github.com/carlchou0dailyfresh/jev-gates.git" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carlchou0dailyfresh/jev-gates.git"
+  },
   "homepage": "https://github.com/carlchou0dailyfresh/jev-gates#readme",
-  "bugs": { "url": "https://github.com/carlchou0dailyfresh/jev-gates/issues" },
-  "keywords": ["jev", "semantic-logic", "logic-gates", "ai", "workflow", "typesafe", "localjev"],
-  "engines": { "node": ">=22" },
+  "bugs": {
+    "url": "https://github.com/carlchou0dailyfresh/jev-gates/issues"
+  },
+  "keywords": [
+    "jev",
+    "semantic-logic",
+    "logic-gates",
+    "ai",
+    "workflow",
+    "typesafe",
+    "localjev"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
-  "bin": { "jev-gates": "./dist/cli.js" },
-  "files": ["dist", "examples", "docs", "README*.md", "LICENSE", "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "jev-gates": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "examples",
+    "docs",
+    "README*.md",
+    "LICENSE",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "CHANGELOG.md"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "npm run build && node --test tests/*.test.mjs",
     "demo": "npm run build && node dist/cli.js run examples/support-triage.json --input examples/support-input.json --mock examples/support-answers.json",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "workbench:dev": "npm run build && npm --prefix workbench run dev",
+    "workbench:build": "npm run build && npm --prefix workbench run build",
+    "workbench:start": "npm run build && npm --prefix workbench start",
+    "research:demo": "npm run build && node workbench/server/research.mjs demo",
+    "verify-report": "node workbench/server/research.mjs verify-report",
+    "replay": "node workbench/server/research.mjs replay"
   },
-  "devDependencies": { "@types/node": "^22.0.0", "typescript": "^5.9.0" }
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.0"
+  }
 }
