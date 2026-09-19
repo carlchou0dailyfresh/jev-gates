@@ -20,8 +20,16 @@ jobs:
       - run: npm ci --prefix workbench
       - run: npm test
       - run: npm run demo
-      - run: npm run workbench:build
       - run: npm run research:demo
-      - run: npm run verify-report -- .jev-runs/research-demo.json
-      - run: npm run replay -- .jev-runs/research-demo.json
+      - run: npm run research:eval
+      - run: npm run studio:build
+      - run: npm run studio:demo
+      - run: npm run studio:verify-report -- .jev-runs/studio/research-demo.json
+      - run: npm run studio:replay -- .jev-runs/studio/research-demo.json
+      - run: npm --prefix ui ci
+      - run: npm --prefix ui run build
+      - run: npm --prefix ui exec -- playwright install --with-deps chromium
+        if: matrix.node == 24
+      - run: npm --prefix ui run test:browser
+        if: matrix.node == 24
       - run: npm pack --dry-run

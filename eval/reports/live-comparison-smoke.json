@@ -1,0 +1,304 @@
+{
+  "startedAt": "2026-09-19T17:18:55.842Z",
+  "finishedAt": "2026-09-19T17:19:08.465Z",
+  "schemaVersion": "1.0",
+  "protocol": {
+    "version": "eval-v1",
+    "frozenAt": "2026-09-20T00:00:00.000Z",
+    "language": "zh-TW",
+    "maxCalls": 8,
+    "gateTimeoutMs": 5000,
+    "minimumCoverage": 0.7,
+    "maximumKnownErrorRate": 0.1,
+    "minimumCasesPerStratum": 30,
+    "decision": "experimental-until-live-heldout",
+    "labelsVersion": "independent-world-executor-v1",
+    "splitVersion": "family-isolated-v1",
+    "calibration": "choice-0.60-margin-0.15-not-empirically-calibrated"
+  },
+  "protocolDigest": "43dbe6825b0066a469a94c40c20804880927001ff15b97db1c64be727f6136cd",
+  "status": "experimental",
+  "modelQuality": "not_established",
+  "planner": "bounded-reviewed-order-selection-v1",
+  "plannerRecords": [
+    {
+      "caseId": "world-normal",
+      "status": "selected",
+      "request": {
+        "question": "未見規則迷你世界",
+        "input": {
+          "contradictory": false,
+          "distractors": [],
+          "examples": [],
+          "family": "chain",
+          "generatorVersion": "world-v1",
+          "hiddenFacts": [],
+          "initial": [
+            "amber"
+          ],
+          "maxSteps": 5,
+          "rules": [
+            {
+              "add": [
+                "blue"
+              ],
+              "any": [],
+              "forbidden": [],
+              "id": "convert",
+              "remove": [],
+              "requires": [
+                "amber"
+              ]
+            },
+            {
+              "add": [
+                "done"
+              ],
+              "any": [],
+              "forbidden": [],
+              "id": "finish",
+              "remove": [],
+              "requires": [
+                "blue"
+              ]
+            }
+          ],
+          "target": "done"
+        },
+        "evidenceIds": [
+          "world-rules"
+        ],
+        "plans": {
+          "preserve": [
+            "reachable",
+            "within-bound",
+            "conclusion"
+          ],
+          "reverse": [
+            "conclusion",
+            "within-bound",
+            "reachable"
+          ]
+        },
+        "budget": {
+          "maxCalls": 3,
+          "maxNodes": 256,
+          "timeoutMs": 35000
+        }
+      },
+      "response": {
+        "model": "localjev-0.2",
+        "answers": {
+          "plan": {
+            "type": "choice",
+            "choice": "preserve",
+            "probabilities": {
+              "preserve": 0.9,
+              "reverse": 0.05,
+              "unknown": 0.05
+            },
+            "confidence": 0.6410037503534697
+          }
+        },
+        "usage": {
+          "input_tokens": 392,
+          "output_tokens": 26
+        },
+        "upstreamModel": "gemma3:27b"
+      }
+    }
+  ],
+  "rows": [
+    {
+      "caseId": "world-normal-42",
+      "scenario": "world",
+      "variant": "normal",
+      "arm": "single-llm",
+      "ablation": "none",
+      "expected": "TRUE",
+      "actual": "TRUE",
+      "failed": false,
+      "failureReason": null,
+      "elapsedMs": 3752.778917,
+      "calls": 1,
+      "provider": "localjev",
+      "model": "localjev-0.2",
+      "language": "zh-TW",
+      "provenance": "live",
+      "tokens": 571,
+      "costUsd": "unknown"
+    },
+    {
+      "caseId": "world-normal-42",
+      "scenario": "world",
+      "variant": "normal",
+      "arm": "atomic-program",
+      "ablation": "none",
+      "expected": "TRUE",
+      "actual": "UNKNOWN",
+      "failed": false,
+      "failureReason": null,
+      "elapsedMs": 2914.0281250000003,
+      "calls": 1,
+      "provider": "localjev",
+      "model": "localjev-0.2",
+      "language": "zh-TW",
+      "provenance": "live",
+      "tokens": 388,
+      "costUsd": "unknown"
+    },
+    {
+      "caseId": "world-normal-42",
+      "scenario": "world",
+      "variant": "normal",
+      "arm": "fixed-layered",
+      "ablation": "none",
+      "expected": "TRUE",
+      "actual": "UNKNOWN",
+      "failed": false,
+      "failureReason": null,
+      "elapsedMs": 1387.890375,
+      "calls": 1,
+      "provider": "localjev",
+      "model": "localjev-0.2",
+      "language": "zh-TW",
+      "provenance": "live",
+      "tokens": 388,
+      "costUsd": "unknown"
+    },
+    {
+      "caseId": "world-normal-42",
+      "scenario": "world",
+      "variant": "normal",
+      "arm": "bounded-planner",
+      "ablation": "none",
+      "expected": "TRUE",
+      "actual": "UNKNOWN",
+      "failed": false,
+      "failureReason": null,
+      "elapsedMs": 4564.062250000001,
+      "calls": 2,
+      "provider": "localjev",
+      "model": "localjev-0.2",
+      "language": "zh-TW",
+      "provenance": "live",
+      "tokens": "unknown",
+      "costUsd": "unknown"
+    }
+  ],
+  "strata": {
+    "localjev/localjev-0.2/zh-TW/world/single-llm/none": {
+      "n": 1,
+      "labelled": 1,
+      "knownLabels": 1,
+      "correctKnown": 1,
+      "falsePositive": 0,
+      "falseNegative": 0,
+      "coverage": 1,
+      "abstentions": 0,
+      "failures": 0,
+      "knownAccuracy": 1,
+      "accuracy95": [
+        0.20654931437723745,
+        1
+      ],
+      "p50Ms": 3752.778917,
+      "p95Ms": 3752.778917,
+      "toolSuccessRate": null,
+      "constraintViolations": 0,
+      "costUsd": "unknown",
+      "brier": null,
+      "nll": null
+    },
+    "localjev/localjev-0.2/zh-TW/world/atomic-program/none": {
+      "n": 1,
+      "labelled": 1,
+      "knownLabels": 1,
+      "correctKnown": 0,
+      "falsePositive": 0,
+      "falseNegative": 0,
+      "coverage": 0,
+      "abstentions": 1,
+      "failures": 0,
+      "knownAccuracy": null,
+      "accuracy95": null,
+      "p50Ms": 2914.0281250000003,
+      "p95Ms": 2914.0281250000003,
+      "toolSuccessRate": null,
+      "constraintViolations": 0,
+      "costUsd": "unknown",
+      "brier": null,
+      "nll": null
+    },
+    "localjev/localjev-0.2/zh-TW/world/fixed-layered/none": {
+      "n": 1,
+      "labelled": 1,
+      "knownLabels": 1,
+      "correctKnown": 0,
+      "falsePositive": 0,
+      "falseNegative": 0,
+      "coverage": 0,
+      "abstentions": 1,
+      "failures": 0,
+      "knownAccuracy": null,
+      "accuracy95": null,
+      "p50Ms": 1387.890375,
+      "p95Ms": 1387.890375,
+      "toolSuccessRate": null,
+      "constraintViolations": 0,
+      "costUsd": "unknown",
+      "brier": null,
+      "nll": null
+    },
+    "localjev/localjev-0.2/zh-TW/world/bounded-planner/none": {
+      "n": 1,
+      "labelled": 1,
+      "knownLabels": 1,
+      "correctKnown": 0,
+      "falsePositive": 0,
+      "falseNegative": 0,
+      "coverage": 0,
+      "abstentions": 1,
+      "failures": 0,
+      "knownAccuracy": null,
+      "accuracy95": null,
+      "p50Ms": 4564.062250000001,
+      "p95Ms": 4564.062250000001,
+      "toolSuccessRate": null,
+      "constraintViolations": 0,
+      "costUsd": "unknown",
+      "brier": null,
+      "nll": null
+    }
+  },
+  "metrics": {
+    "n": 4,
+    "labelled": 4,
+    "knownLabels": 4,
+    "correctKnown": 1,
+    "falsePositive": 0,
+    "falseNegative": 0,
+    "coverage": 0.25,
+    "abstentions": 3,
+    "failures": 0,
+    "knownAccuracy": 1,
+    "accuracy95": [
+      0.20654931437723745,
+      1
+    ],
+    "p50Ms": 2914.0281250000003,
+    "p95Ms": 4564.062250000001,
+    "toolSuccessRate": null,
+    "constraintViolations": 0,
+    "costUsd": "unknown",
+    "brier": null,
+    "nll": null
+  },
+  "notes": [
+    "Fixture arms receive scripted answers; these results only exercise pipelines, not architecture quality.",
+    "Planner v1 only chooses among two equivalent reviewed execution orderings; open-ended task decomposition remains unimplemented.",
+    "An independent live comparison must control provider, actual model, data, tools and budget; fault injection remains a separate fixture stratum.",
+    "Intervals are descriptive binomial Wilson intervals; family-correlated cases are not independent scientific evidence.",
+    "Noul, Choice and Score are not merged into a universal probability; Brier/NLL remain null until an appropriate probability contract and calibration data exist."
+  ]
+}

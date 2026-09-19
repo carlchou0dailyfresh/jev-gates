@@ -27,6 +27,27 @@ flowchart LR
     C --> V[工具執行與結果驗證]
 ```
 
+## 本機語意研究工作台
+
+需要 Node.js 22.12+（或 24+）。在 repository 根目錄執行：
+
+```sh
+npm ci
+npm run workbench
+```
+
+開啟 `http://127.0.0.1:4317`。四個繁體中文情境不需金鑰即可用 fixture 操作；UI 依賴在 `ui/`，核心函式庫沒有 React 執行期依賴。
+
+```sh
+npm run research:demo
+node dist/cli.js verify-report .jev-runs/<runId>.json
+node dist/cli.js replay .jev-runs/<runId>.json
+npm run research:eval
+npm run research:smoke  # 一次既有本機 LocalJev 推論，不自動改用雲端
+```
+
+安裝已打包套件後，也可用 `jev-gates workbench` 啟動隨附介面。完整操作、資料保存、預算與研究界線見 [工作台操作手冊](docs/workbench.md)、[情境導覽](docs/scenarios.md)、[評測協議](docs/eval-protocol.md)。fixture、工作流程完成與真實模型品質分開呈現；本工作台沒有已驗證 AGI 的主張。
+
 ## 先跑離線範例
 
 ### 用瀏覽器探索情境與判斷支線
@@ -36,10 +57,10 @@ JEV Studio 提供四個合成工作情境，可編輯任務、證據、判斷問
 ```sh
 npm ci
 npm ci --prefix workbench
-npm run workbench:dev
+npm run studio:dev
 ```
 
-開啟 `http://127.0.0.1:3088`。預設的固定示範分數不會理解文字；選用 LocalJev 才會向本機服務要求語意推論。LocalJev 是 JEV 相容橋接器，與 TypeSafe JEV 不同。所有情境皆為合成示例，沒有實際準確率或 AGI 的驗證主張。詳見[工作台使用說明](docs/workbench.md)。
+開啟 `http://127.0.0.1:3088`。預設的固定示範分數不會理解文字；選用 LocalJev 才會向本機服務要求語意推論。LocalJev 是 JEV 相容橋接器，與 TypeSafe JEV 不同。所有情境皆為合成示例，沒有實際準確率或 AGI 的驗證主張。詳見[Studio 使用說明](docs/studio.md)。
 
 ### 原有命令列範例
 

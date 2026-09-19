@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { evaluateDraft, replayRun } from './api.mjs';
 
-const [command, filename = '.jev-runs/research-demo.json'] = process.argv.slice(2);
+const [command, filename = '.jev-runs/studio/research-demo.json'] = process.argv.slice(2);
 try {
   if (command === 'demo') {
     const scenarios = JSON.parse(await fs.readFile(new URL('../scenarios.json', import.meta.url), 'utf8'));

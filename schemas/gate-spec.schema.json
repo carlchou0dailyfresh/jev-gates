@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jev-gates.local/schemas/1.0/gate-spec.schema.json",
+  "title": "GateSpec",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "gateId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "question": {
+      "type": "string",
+      "minLength": 1
+    },
+    "inputSchema": {
+      "type": "object"
+    },
+    "evidenceIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "outputType": {
+      "enum": [
+        "truth",
+        "support",
+        "choice",
+        "score"
+      ]
+    },
+    "unknownConditions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "policy": {
+      "type": "object"
+    },
+    "calibrationVersion": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "examples": {
+      "type": "array",
+      "items": {}
+    },
+    "counterexamples": {
+      "type": "array",
+      "items": {}
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "gateId",
+    "version",
+    "question",
+    "inputSchema",
+    "evidenceIds",
+    "outputType",
+    "unknownConditions",
+    "policy",
+    "calibrationVersion",
+    "examples",
+    "counterexamples"
+  ],
+  "additionalProperties": false
+}

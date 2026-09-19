@@ -1,0 +1,2 @@
+# The root package files allowlist includes ui/dist. Do not inherit the
+# development .gitignore here: npm must ship the prebuilt static workbench.

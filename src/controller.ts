@@ -18,15 +18,18 @@ export interface ControllerDefinition {
   maxSteps: number;
   states: Record<string, ControllerState>;
 }
-export interface ActionContext { state: string; tool: string; operationId: string; step: number }
+export interface ActionContext { state: string; tool: string; operationId: string; step: number; inputDigest?: string; policyDigest?: string; signal?: AbortSignal }
 export interface ControllerTool<Snapshot = Json> {
   execute(snapshot: Snapshot, context: ActionContext): Promise<unknown>;
   /** Must check actual evidence deterministically; only the boolean true advances. */
   verify(receipt: unknown, context: ActionContext): boolean | Promise<boolean>;
+  /** Query the destination by the persisted operation id. Must never resubmit an action. */
+  query?(context: ActionContext): Promise<unknown>;
 }
 export type ControllerStatus = 'ready' | 'waiting' | 'paused' | 'pending' | 'completed' | 'exhausted';
 export type ControllerReason = 'condition_unknown' | 'condition_error' | 'condition_false'
-  | 'awaiting_receipt' | 'tool_error' | 'verification_failed' | 'verification_error' | 'budget_exhausted';
+  | 'awaiting_receipt' | 'tool_error' | 'verification_failed' | 'verification_error' | 'budget_exhausted'
+  | 'condition_timeout' | 'tool_timeout' | 'verification_timeout' | 'aborted';
 export interface ControllerCheckpoint {
   schemaVersion: 1;
   definitionDigest: string;
@@ -40,12 +43,15 @@ export interface CheckpointStore {
   save(checkpoint: ControllerCheckpoint): Promise<void>;
   /** Pass the returned value to Controller's checkpoint option for validation. */
   load(): Promise<unknown | null>;
+  /** Optional cross-instance/process single-writer lock. */
+  withLock?<T>(action: () => Promise<T>): Promise<T>;
 }
 export interface ControllerOptions<Snapshot = Json> {
-  evaluate(gate: string, snapshot: Snapshot, context: { state: string; step: number }): Truth | Promise<Truth>;
+  evaluate(gate: string, snapshot: Snapshot, context: { state: string; step: number; signal?: AbortSignal }): Truth | Promise<Truth>;
   tools: Record<string, ControllerTool<Snapshot>>;
   store?: CheckpointStore;
   checkpoint?: unknown;
+  gateTimeoutMs?: number; toolTimeoutMs?: number; verifyTimeoutMs?: number; signal?: AbortSignal;
 }
 
 function record(value: unknown): value is Record<string, unknown> {
@@ -102,8 +108,8 @@ function validateCheckpoint(value: unknown, definition: ControllerDefinition, di
   const state = definition.states[value.state]!;
   assert(('terminal' in state) === (status === 'completed'), 'terminal state/status mismatch');
   const reasons: Record<string, readonly unknown[]> = {
-    ready: [undefined], waiting: ['condition_false'], paused: ['condition_unknown', 'condition_error'],
-    pending: ['awaiting_receipt', 'tool_error', 'verification_failed', 'verification_error'],
+    ready: [undefined], waiting: ['condition_false'], paused: ['condition_unknown', 'condition_error', 'condition_timeout', 'aborted'],
+    pending: ['awaiting_receipt', 'tool_error', 'verification_failed', 'verification_error', 'tool_timeout', 'verification_timeout', 'aborted'],
     completed: [undefined], exhausted: ['budget_exhausted'],
   };
   assert(reasons[String(status)]!.includes(value.reason), 'invalid reason for status');
@@ -112,11 +118,25 @@ function validateCheckpoint(value: unknown, definition: ControllerDefinition, di
   if (['ready', 'waiting', 'paused'].includes(String(status))) assert(Number(value.steps) < definition.maxSteps, 'runnable state exceeds budget');
   if (status === 'pending') {
     assert(record(value.pending) && !('terminal' in state), 'pending receipt is required');
-    keys(value.pending, ['state', 'tool', 'operationId', 'step', 'next']);
+    keys(value.pending, ['state', 'tool', 'operationId', 'step', 'next', 'inputDigest', 'policyDigest']);
+    for (const key of ['inputDigest', 'policyDigest']) if (value.pending[key] !== undefined) assert(typeof value.pending[key] === 'string' && /^[a-f0-9]{64}$/.test(value.pending[key]), 'invalid operation digest');
     const p = value.pending;
     assert(p.state === value.state && p.tool === state.tool && p.next === state.next && p.step === value.steps, 'pending operation does not match transition');
     assert(typeof p.operationId === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(p.operationId), 'invalid operation id');
   } else assert(!Object.hasOwn(value, 'pending'), 'unexpected pending operation');
+}
+
+class DeadlineError extends Error { constructor(readonly reason: 'timeout' | 'aborted') { super(reason); } }
+async function bounded<T>(action: (signal: AbortSignal) => T | Promise<T>, timeoutMs: number, signal?: AbortSignal): Promise<T> {
+  const controller = new AbortController(); let timer: ReturnType<typeof setTimeout> | undefined;
+  let abort: (() => void) | undefined;
+  const stopped = new Promise<never>((_, reject) => {
+    abort = () => { controller.abort(); reject(new DeadlineError('aborted')); };
+    if (signal?.aborted) abort(); else signal?.addEventListener('abort', abort, { once: true });
+    timer = setTimeout(() => { controller.abort(); reject(new DeadlineError('timeout')); }, timeoutMs);
+  });
+  try { if (controller.signal.aborted) return await stopped; return await Promise.race([Promise.resolve().then(() => action(controller.signal)), stopped]); }
+  finally { clearTimeout(timer); if (abort) signal?.removeEventListener('abort', abort); }
 }
 
 /** An application-controlled state machine. It never contains browser, shell or eval execution. */
@@ -135,8 +155,9 @@ export class Controller<Snapshot = Json> {
       if ('terminal' in state) continue;
       const tool = Object.hasOwn(options.tools, state.tool) ? options.tools[state.tool] : undefined;
       assert(tool && typeof tool.execute === 'function' && typeof tool.verify === 'function', `tool ${state.tool} needs execute and verify`);
-      tools[state.tool] = { execute: tool.execute, verify: tool.verify };
+      tools[state.tool] = { execute: tool.execute, verify: tool.verify, ...(tool.query ? { query: tool.query } : {}) };
     }
+    for (const key of ['gateTimeoutMs', 'toolTimeoutMs', 'verifyTimeoutMs'] as const) if (options[key] !== undefined) assert(Number.isFinite(options[key]) && options[key]! > 0 && options[key]! <= 300_000, 'invalid phase deadline');
     this.options = { ...options, tools };
     this.current = { schemaVersion: 1, definitionDigest: digest, state: definition.initial, steps: 0, status: 'ready' };
     if (options.checkpoint !== undefined) {
@@ -150,7 +171,14 @@ export class Controller<Snapshot = Json> {
   private async exclusive(action: () => Promise<ControllerCheckpoint>): Promise<ControllerCheckpoint> {
     if (this.busy) throw new Error('Controller is already running; concurrent calls are rejected');
     this.busy = true;
-    try { return await action(); } finally { this.busy = false; }
+    try {
+      if (!this.options.store?.withLock) return await action();
+      return await this.options.store.withLock(async () => {
+        const saved = await this.options.store!.load();
+        if (saved !== null) assert(canonical(saved) === canonical(this.current), 'checkpoint changed by another writer; restore before continuing');
+        return action();
+      });
+    } finally { this.busy = false; }
   }
   private async persist(next: ControllerCheckpoint): Promise<ControllerCheckpoint> {
     // Update memory only after durable save. A failed post-action save leaves pending intact.
@@ -181,16 +209,16 @@ export class Controller<Snapshot = Json> {
       else { started.status = 'paused'; started.reason = 'condition_unknown'; }
       await this.persist(started);
       let truth: Truth;
-      try { truth = await this.options.evaluate(state.gate, snapshot, { state: this.current.state, step: this.current.steps }); }
-      catch { return this.stop('paused', 'condition_error'); }
+      try { truth = await bounded(signal => this.options.evaluate(state.gate, snapshot, { state: this.current.state, step: this.current.steps, signal }), this.options.gateTimeoutMs ?? 30_000, this.options.signal); }
+      catch (error) { return this.stop('paused', error instanceof DeadlineError ? error.reason === 'aborted' ? 'aborted' : 'condition_timeout' : 'condition_error'); }
       if (truth === 'FALSE') return this.stop('waiting', 'condition_false', state.onFalse ?? this.current.state);
       if (truth !== 'TRUE') return this.stop('paused', 'condition_unknown');
-      const pending = { state: this.current.state, tool: state.tool, operationId: randomUUID(), step: this.current.steps, next: state.next };
+      const pending = { state: this.current.state, tool: state.tool, operationId: randomUUID(), step: this.current.steps, next: state.next, inputDigest: createHash('sha256').update(canonical(snapshot)).digest('hex'), policyDigest: this.current.definitionDigest };
       // A crash after this save requires an external receipt. Never automatically replay.
       await this.persist({ ...this.base(), status: 'pending', reason: 'awaiting_receipt', pending });
       let receipt: unknown;
-      try { receipt = await this.options.tools[state.tool]!.execute(snapshot, { ...pending }); }
-      catch { return this.persist({ ...this.current, reason: 'tool_error' }); }
+      try { receipt = await bounded(signal => this.options.tools[state.tool]!.execute(snapshot, { ...pending, signal }), this.options.toolTimeoutMs ?? 30_000, this.options.signal); }
+      catch (error) { return this.persist({ ...this.current, reason: error instanceof DeadlineError ? error.reason === 'aborted' ? 'aborted' : 'tool_timeout' : 'tool_error' }); }
       return this.verifyPending(receipt);
     });
   }
@@ -198,8 +226,8 @@ export class Controller<Snapshot = Json> {
   private async verifyPending(receipt: unknown): Promise<ControllerCheckpoint> {
     const pending = this.current.pending!;
     let verified: boolean;
-    try { verified = await this.options.tools[pending.tool]!.verify(receipt, { ...pending }); }
-    catch { return this.persist({ ...this.current, reason: 'verification_error' }); }
+    try { verified = await bounded(signal => this.options.tools[pending.tool]!.verify(receipt, { ...pending, signal }), this.options.verifyTimeoutMs ?? 30_000, this.options.signal); }
+    catch (error) { return this.persist({ ...this.current, reason: error instanceof DeadlineError ? error.reason === 'aborted' ? 'aborted' : 'verification_timeout' : 'verification_error' }); }
     if (verified !== true) return this.persist({ ...this.current, reason: 'verification_failed' });
     const next = this.base(pending.next);
     if ('terminal' in this.definition.states[pending.next]!) next.status = 'completed';
@@ -215,6 +243,19 @@ export class Controller<Snapshot = Json> {
     });
   }
 
+  /** Queries destination state for the existing id; never calls execute. */
+  async queryPending(): Promise<ControllerCheckpoint> {
+    return this.exclusive(async () => {
+      if (this.current.status !== 'pending') throw new Error('No pending operation to query');
+      const pending = this.current.pending!, tool = this.options.tools[pending.tool]!;
+      if (!tool.query) throw new Error('Tool has no destination query adapter');
+      let receipt: unknown;
+      try { receipt = await bounded(signal => tool.query!({ ...pending, signal }), this.options.verifyTimeoutMs ?? 30_000, this.options.signal); }
+      catch (error) { return this.persist({ ...this.current, reason: error instanceof DeadlineError ? error.reason === 'aborted' ? 'aborted' : 'verification_timeout' : 'verification_error' }); }
+      return this.verifyPending(receipt);
+    });
+  }
+
   /** Explicit acknowledgement after a human/planner reviews UNKNOWN or evaluation failure. */
   async resumeAfterReview(): Promise<ControllerCheckpoint> {
     return this.exclusive(async () => {
@@ -224,9 +265,19 @@ export class Controller<Snapshot = Json> {
   }
 }
 
-/** Single-writer local checkpoint storage. Atomic replacement is not cross-process locking. */
+/** Local single-writer storage. A crash leaves a lock for explicit operator review.
+ * It is never automatically broken by guessing whether an external action completed. */
 export class FileCheckpointStore implements CheckpointStore {
   constructor(readonly path: string) {}
+  async withLock<T>(action: () => Promise<T>): Promise<T> {
+    await mkdir(dirname(this.path), { recursive: true, mode: 0o700 });
+    const lockPath = `${this.path}.lock`;
+    let lock;
+    try { lock = await open(lockPath, 'wx', 0o600); }
+    catch (error) { if ((error as NodeJS.ErrnoException).code === 'EEXIST') throw new Error('Checkpoint has an active or unreconciled writer lock'); throw error; }
+    try { await lock.writeFile(JSON.stringify({ pid: process.pid, createdAt: new Date().toISOString() })); return await action(); }
+    finally { await lock.close(); await unlink(lockPath); }
+  }
   async load(): Promise<unknown | null> {
     try { return JSON.parse(await readFile(this.path, 'utf8')) as unknown; }
     catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null; throw error; }
