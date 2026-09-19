@@ -1,0 +1,1569 @@
+{
+  "schemaVersion": "1.0",
+  "generatorVersion": "world-v1",
+  "labelsVersion": "independent-executor-v1",
+  "splitVersion": "family-isolated-v1",
+  "protocolDigest": "1e38d6e63c636b129dc7bc777abe7b0b6a75a029c6d46c83a5ba926cd842448c",
+  "sourceKind": "synthetic",
+  "language": "zh-TW",
+  "families": {
+    "train": [
+      "chain"
+    ],
+    "dev": [
+      "conjunction"
+    ],
+    "calibration": [
+      "consumption"
+    ],
+    "test": [
+      "inhibitor",
+      "alternative",
+      "reversible"
+    ]
+  },
+  "datasetDigest": "411302fd76827e551388b61249239ef6730ce6d65b9481445bc8a42d213e8871",
+  "cases": [
+    {
+      "id": "train-chain-1000",
+      "split": "train",
+      "family": "chain",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "31c38398518a15651c2f8918f749e3a110352ca9183ebffb07fcbb6cb3062dc2"
+    },
+    {
+      "id": "train-chain-1001",
+      "split": "train",
+      "family": "chain",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "f88893bfb3156055c12f742fc501162a5df8414674060af01da662d02d554763"
+    },
+    {
+      "id": "train-chain-1002",
+      "split": "train",
+      "family": "chain",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "2f84c483ba87c00f44eda43fcb78ad7378197253223753c1f698dd7d7efb2b4c"
+    },
+    {
+      "id": "train-chain-1003",
+      "split": "train",
+      "family": "chain",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "f972f46290a645a4172c592a025e33cc9c0e419675522ab632330e60f2e4362e"
+    },
+    {
+      "id": "train-chain-1004",
+      "split": "train",
+      "family": "chain",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "b7f5cfc37cadc76d4072087e43cc3bea878df3109626a2cae94c9b99ee3f17cc"
+    },
+    {
+      "id": "train-chain-1005",
+      "split": "train",
+      "family": "chain",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "4778936f676ab169b8494d1a73c4483f6fa301791163ced2a660bfb121189aef"
+    },
+    {
+      "id": "train-chain-1006",
+      "split": "train",
+      "family": "chain",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "afd6626b5bb098091fddf780e4393d3d61bfc9c604a790b4b27fe37ae716e3c3"
+    },
+    {
+      "id": "train-chain-1007",
+      "split": "train",
+      "family": "chain",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "a9933ca05ad59fd77ad0f7a26a22efd27fff885d77d5d8c93973bbd29957e4c7"
+    },
+    {
+      "id": "train-chain-1008",
+      "split": "train",
+      "family": "chain",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "8cf01981993792fcac81bb1cc612d8437153b13d94230fe8bd2a23b6cb17b4d6"
+    },
+    {
+      "id": "train-chain-1009",
+      "split": "train",
+      "family": "chain",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "986b3e64623a88f089e3d63a2f88946ba9b7d8eb08411eb1d1f66e8c1c038b0a"
+    },
+    {
+      "id": "train-chain-1010",
+      "split": "train",
+      "family": "chain",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "4bad5a756d98630721ff3baeed7c5469659af60ce45ab8865196925d8e7c9cb3"
+    },
+    {
+      "id": "train-chain-1011",
+      "split": "train",
+      "family": "chain",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "ba77f631a944225e5eb4babe08ec786cf24d6c5e031743dfe5ce4cdece4f7f0a"
+    },
+    {
+      "id": "train-chain-1012",
+      "split": "train",
+      "family": "chain",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "c22b57327aa245dbcb89847785fd87e3ebb986bd4d79aeb0f8cac76f4fd738b0"
+    },
+    {
+      "id": "train-chain-1013",
+      "split": "train",
+      "family": "chain",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "13704f931c18f2e6c340288f92b5574c2c03df9cf7fabbd9a458010c8b7bf40b"
+    },
+    {
+      "id": "train-chain-1014",
+      "split": "train",
+      "family": "chain",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "1897aabcf62a25ad3fe8c4cdfee08854a0e216d23ab0ee05ca9747402b9a6e5b"
+    },
+    {
+      "id": "train-chain-1015",
+      "split": "train",
+      "family": "chain",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "5acb9e9f34414b3a8337b6b72b814d99375ea2cb172d6468b0a2826e429e9a7f"
+    },
+    {
+      "id": "train-chain-1016",
+      "split": "train",
+      "family": "chain",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "0145cb3f364d80eb20ee72000457af191138cb597144ac1fa09d65b472105d89"
+    },
+    {
+      "id": "train-chain-1017",
+      "split": "train",
+      "family": "chain",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "0ce04b8d82d7acead7895dd4a91bc326d31ce7f8fd20b510eb14263eff3608fe"
+    },
+    {
+      "id": "train-chain-1018",
+      "split": "train",
+      "family": "chain",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "4da3786845446a7686ff57b515580c759b849aba35f4065e9eb5d702e3ca1305"
+    },
+    {
+      "id": "train-chain-1019",
+      "split": "train",
+      "family": "chain",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "51d72e4807edc210e19dd09069a994d64df8f7ce9dcd32e7f859234b8fc00739"
+    },
+    {
+      "id": "train-chain-1020",
+      "split": "train",
+      "family": "chain",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "8b6c914d844beaeb4eeee2a08870eab7c72cfaaad84061dd317f3a71b311c219"
+    },
+    {
+      "id": "train-chain-1021",
+      "split": "train",
+      "family": "chain",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "b24226d323c89a55be3b2ea5aee313afb47de178c47196207cd0883d36e3449e"
+    },
+    {
+      "id": "train-chain-1022",
+      "split": "train",
+      "family": "chain",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "d5afdc677ec9099be61e41f2d439ee607e3e60bf6b8903ab3ba2d2775623ca79"
+    },
+    {
+      "id": "train-chain-1023",
+      "split": "train",
+      "family": "chain",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "15770704c8ebe17c066dbde3545f549716e8d2b3f5004fc9aa3cd6bb0258d5ca"
+    },
+    {
+      "id": "dev-conjunction-1000",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "020eb40a250717b41ba0512dffd5cf2ac05f57623a220a350d9ccdd9f15d36bf"
+    },
+    {
+      "id": "dev-conjunction-1001",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "b2ad236c7d7d05419609ace17f65a1323ce2158bc24ea02a021f39fbf5769365"
+    },
+    {
+      "id": "dev-conjunction-1002",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "6b8fff006dc15365ca0799e3843e11488d0348e744e4cb5bce60e11031c45d7f"
+    },
+    {
+      "id": "dev-conjunction-1003",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "21fc4d6e0833c1afc1a5c883ab8e398596f6e62b8eb2242db8cf11b84b32edbc"
+    },
+    {
+      "id": "dev-conjunction-1004",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "15a8fcbc1f0c2ad484c933e23b9f1001a06ec7bdcb0c71b6c50d181a5dab2741"
+    },
+    {
+      "id": "dev-conjunction-1005",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "fb4c6f9b871f999eb41f0bebf0b83458d726f219d3768b785a77138709c45099"
+    },
+    {
+      "id": "dev-conjunction-1006",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "7807033e00c66609f6a48ec0386686bee39022ab02ce7f242f0163a4cc5c54c2"
+    },
+    {
+      "id": "dev-conjunction-1007",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "51db0de810629fb5b5ea9f2c5fba4926767e2aa624772a7beb2684e498f26667"
+    },
+    {
+      "id": "dev-conjunction-1008",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "413e055c5f1165a95cdd43c690444e75e91599867c383c71c348d2c7093f5b5a"
+    },
+    {
+      "id": "dev-conjunction-1009",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "48a8ddb431609c176fbf12567e43e60569defcbd02da875b990a9c93226ea4ed"
+    },
+    {
+      "id": "dev-conjunction-1010",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "07d157fc9391b7eedf2165a53d061926f5939e41eb719c06f0af56ef19ed8b03"
+    },
+    {
+      "id": "dev-conjunction-1011",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "c7f7b8438cda0c1538bc2889f40a88e6eac2b281ef8d1798ff592ee093958cf3"
+    },
+    {
+      "id": "dev-conjunction-1012",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "0d0cef08289dfdc0e22fcaa741b589fefb3ae68e23cad76fe26a4feb9e1b1890"
+    },
+    {
+      "id": "dev-conjunction-1013",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "c53aafc01ba6114d624e63a806266eea8a09917c85ddcf7a03e82fa1f95a3fda"
+    },
+    {
+      "id": "dev-conjunction-1014",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "6b7738da068381958e38f997d8bd7d6a32a2a2ec32a072f64d1da1f78098cb11"
+    },
+    {
+      "id": "dev-conjunction-1015",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "3fd99a9f0bcf60b7be8e42f4422e9cabb77b83fd2639a85a01386ef8636bea8c"
+    },
+    {
+      "id": "dev-conjunction-1016",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "9f3e46af032e90b2a78f42d942520c01d3269dd609adb6b8e11f725ad416f564"
+    },
+    {
+      "id": "dev-conjunction-1017",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "82d0d2f86db4a1243eb6ef7c5ec3503fd0ac3c332748ea961ad4e1ff92741c35"
+    },
+    {
+      "id": "dev-conjunction-1018",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "f6c942303d0c9dd816f8ce0987fe2a8fc38f4c98ed64a3647425a73618d516e2"
+    },
+    {
+      "id": "dev-conjunction-1019",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "7586947707ff2595036a20c2913c6f82f68c18028c44aae2c77d6b0ca1faffbe"
+    },
+    {
+      "id": "dev-conjunction-1020",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "e8bda74f4f242b63d264211fab8bf3986d16d36318ead0b92d9ff4ab499941c1"
+    },
+    {
+      "id": "dev-conjunction-1021",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "c7b1cf075e7a25ca1dd2edfb1e3dbe3e72b60e72f8085af5fcd8741a744ae823"
+    },
+    {
+      "id": "dev-conjunction-1022",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "163f6352d828dcbceb31b431234deebd42bc6e05b662cc50728b35dcd4a6241f"
+    },
+    {
+      "id": "dev-conjunction-1023",
+      "split": "dev",
+      "family": "conjunction",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "46b799ac1c42bd8e3d4b362bc846fbb4e6e6ca5426906e774a6bbe8185bd4b06"
+    },
+    {
+      "id": "calibration-consumption-1000",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "7fe99c7282c753404a689e24b84422fa8f21e4d4c32c8a457dd3e75541654abe"
+    },
+    {
+      "id": "calibration-consumption-1001",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "3aecb902ff251b888f219479f01d1fd4b95815fddb1a893fbdf2b7b57e441580"
+    },
+    {
+      "id": "calibration-consumption-1002",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "710e7e756176ecb38425fd164c1cde4b8877f699d8fd7b79c725db0fd64d14c6"
+    },
+    {
+      "id": "calibration-consumption-1003",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "48a744f75951008fa88f479c164d9a99f8247c983484302c3bd6332b628da4fd"
+    },
+    {
+      "id": "calibration-consumption-1004",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "eb72c28710a4ec99e4258c0cea0dbba21f43eb765b88857daa359095e5968db2"
+    },
+    {
+      "id": "calibration-consumption-1005",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "7a6b15079a5db2cf667dce008ca96b18675d4e7f3e57955a365f270b2a7fb273"
+    },
+    {
+      "id": "calibration-consumption-1006",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "98b02afec191eb4af12c4574fb003b894e1fbd4f654d9f0d7d6afc7eaba752d8"
+    },
+    {
+      "id": "calibration-consumption-1007",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "2b5973781a1e9172c03fd00dd48e1dc7bc7ee9c687a7adc9a6d1d57ff88aa316"
+    },
+    {
+      "id": "calibration-consumption-1008",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "65cb7b0b0e12ed1301a2d6459bb0d506865f2bf94a07de7ef21e2af0e67af141"
+    },
+    {
+      "id": "calibration-consumption-1009",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "1ea331651a206483832bc6457d87ebc80c0aac53128f09c87b009bfe2fa36be8"
+    },
+    {
+      "id": "calibration-consumption-1010",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "745efbb3d518a53bb1719aea34fb0151f8f153c65ff8b3af3993823e61d3eb24"
+    },
+    {
+      "id": "calibration-consumption-1011",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "438c635ce79c69f26d6d4c5ff993dc22b94e087f39432a9e3a7b11332daec16b"
+    },
+    {
+      "id": "calibration-consumption-1012",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "3151b40105e461cb296a08d65692fea04da335bedf9190bcbf0558104a782c56"
+    },
+    {
+      "id": "calibration-consumption-1013",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "1da4733ce8d4098b7dbbfe6d1be62fea68ba2d284e58d7730389087fa5e3f471"
+    },
+    {
+      "id": "calibration-consumption-1014",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "e061cbb8e3ca2781482ae792a35336ace064e15f99a655b9447972a7d18e9402"
+    },
+    {
+      "id": "calibration-consumption-1015",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "4e4208b61dff50cf1ebf3396359727fd46bfcdfc2bccb8237c7baee6b19911c5"
+    },
+    {
+      "id": "calibration-consumption-1016",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "ebc1ab6276d8c49be03bfb2a378179093b101b6e5d795b93189136e80747bae8"
+    },
+    {
+      "id": "calibration-consumption-1017",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "26ebe857bf2c39b93651425a144eaa21dc2178b6bb651235a33fb2db9cdb58c2"
+    },
+    {
+      "id": "calibration-consumption-1018",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "56e53f0e6290276a993370446918240939d3caba85338bd485d338eba047b9cf"
+    },
+    {
+      "id": "calibration-consumption-1019",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "bd9b7a95a3403817bac3dbd5dcbf86b5e78e75c62afdd507cd01231c0f8e87d8"
+    },
+    {
+      "id": "calibration-consumption-1020",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "00cbe6db48e7b8b68c00c06a060bed0d2b7246bf3831e1a5ac84c3fdc1774bf6"
+    },
+    {
+      "id": "calibration-consumption-1021",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "808cd8b7dbf8506dab5738eb4b72910dbe0af3b145d612c0f28766fd712aebb8"
+    },
+    {
+      "id": "calibration-consumption-1022",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "2748203525cd1a1e2dd0146d4b2b10d4182c40f4d6b13eab88f1f4d764f64c1c"
+    },
+    {
+      "id": "calibration-consumption-1023",
+      "split": "calibration",
+      "family": "consumption",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "24ba289a5c2522ca9c155c11db614717c4f16205254b85d3d55da4b0405f33d1"
+    },
+    {
+      "id": "test-inhibitor-1000",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "270c1699fdb7fa31123e6f76f20ac18fad78015a561ce3996f605b50be63bb41"
+    },
+    {
+      "id": "test-inhibitor-1001",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "7359942db9da081072ff8b810ff9fd286a3e39d45c0b6e9442c107f58bd22435"
+    },
+    {
+      "id": "test-inhibitor-1002",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "150acdda5426aa81d5191215bbbe87d62baccc5e08bf674470a01f18bff82d8b"
+    },
+    {
+      "id": "test-inhibitor-1003",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "c8d306f75d8260b2df93de6c167d26a80474bdbe140c492329c0ad9606840401"
+    },
+    {
+      "id": "test-inhibitor-1004",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "0bdbc822d61ddeb7fa03ab33d3c08674ca287822779f0871aa2ffbd7e239b119"
+    },
+    {
+      "id": "test-inhibitor-1005",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "75ffee3ca560be842765954387b5db82804ae2d6b2e596bd928b151575a06b3a"
+    },
+    {
+      "id": "test-inhibitor-1006",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "eb036e28269f358b009302d1d6a4eea74d6d0477ae4a2feb3c813c97fda83b55"
+    },
+    {
+      "id": "test-inhibitor-1007",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "48c386095fed89b02f15c04e9a2e3a0f847648fe505f36e62a80166f72d8b910"
+    },
+    {
+      "id": "test-inhibitor-1008",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "4dbdcad983abd1292558c5f105e339dd00d879ee9fa6647c68ce9b4efac7cea5"
+    },
+    {
+      "id": "test-inhibitor-1009",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "b125dcadf320234eba56ad6d87334b1abab20d203ecc22e2b5e32d37769b33c5"
+    },
+    {
+      "id": "test-inhibitor-1010",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "7590a8b2cdfee32cd3267426e7134fea11b07efd90524bfc2b07d507d40c235f"
+    },
+    {
+      "id": "test-inhibitor-1011",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "befaca492a18b8260d116fb19482cfe0665262a603ef712364451f5371c20db9"
+    },
+    {
+      "id": "test-inhibitor-1012",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "5e6bd36d81ddbc1023b5724b5a9ff9c30809092ac48b43cc0bc427e97953b6df"
+    },
+    {
+      "id": "test-inhibitor-1013",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "4bd3fc3e53dc500deda95ecdfd7d5f712b2c3828c3172f227d7140c77a430b95"
+    },
+    {
+      "id": "test-inhibitor-1014",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "e561e6efd6c77929297aad1a91f2ddfde25763bbb8ac43d305b8afacfd1330c9"
+    },
+    {
+      "id": "test-inhibitor-1015",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "337b144b13844606c19438e17fa718a930584d55357287753d983fe7bd57219e"
+    },
+    {
+      "id": "test-inhibitor-1016",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "3ffbb77c361cf2b423e66937891027b1046acaef96fa23792ab279ebcaa23d27"
+    },
+    {
+      "id": "test-inhibitor-1017",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "713e44eacb48b5e18aa3ebd569fa57e59eb4c2cb9b8b9bd955f4f7786171f406"
+    },
+    {
+      "id": "test-inhibitor-1018",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "e074143b1ee0480562ffae79d214e5eadb3a19320c10d78739b5a86031f16004"
+    },
+    {
+      "id": "test-inhibitor-1019",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "b775fd7c7ff0f07fa840b65a21e24f50e677655fb43f7b05e2fa89be859f21c5"
+    },
+    {
+      "id": "test-inhibitor-1020",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "1fd9d011b5342fdb02af50b7921815baa69106624196810cb49cf475fd0732c9"
+    },
+    {
+      "id": "test-inhibitor-1021",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "27a7cc74867e175630d00f3fa8702c480fc7158a5eb49aef59d6ef5dd59b2085"
+    },
+    {
+      "id": "test-inhibitor-1022",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "b76cbfcec34dda0eb8345586c7a173dc553d29e55360199a3340b693d0c38aa9"
+    },
+    {
+      "id": "test-inhibitor-1023",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "2a6e98d902d7693af0f7acbd92556fd18b10d988ccec706848b52b28b6f8ced5"
+    },
+    {
+      "id": "test-inhibitor-1024",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "ece60f9f99314901bb307d3c778873d15841ac2a0cf51fa15f7372951a1f30a1"
+    },
+    {
+      "id": "test-inhibitor-1025",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "aaec0574ca88a2aa2524e31eb8961b19fcec1afeb8d01a5a2bcd074b9d722aae"
+    },
+    {
+      "id": "test-inhibitor-1026",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "7510f5f143d333b1d0317420613a1e37da847e6beb4e3d5668fb58c9a6594383"
+    },
+    {
+      "id": "test-inhibitor-1027",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "fed1be1c80e4177d83f64f82ede3ae77228206375ad3821aeba0cd78947b2207"
+    },
+    {
+      "id": "test-inhibitor-1028",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "d69f438426be82d2131d7a1b677515668a94e8c13d7a58035f06c92c6cdfab44"
+    },
+    {
+      "id": "test-inhibitor-1029",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "0ef4923ad4b23f5f7f98b7a0915f12f7a7ca58236f6f89d0423537ec8c4b0261"
+    },
+    {
+      "id": "test-inhibitor-1030",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "50a1641e328e44801200eff45c332564f338966a98a4b52852343a157362b720"
+    },
+    {
+      "id": "test-inhibitor-1031",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "6b26d9d0feb2647babdfb40f766d6d7dc53b10978a62b32e48e6333963485a39"
+    },
+    {
+      "id": "test-inhibitor-1032",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "60cbfc9eb03099f9b9eaa8fc6713777678588be2fa68aa224092c75295bad467"
+    },
+    {
+      "id": "test-inhibitor-1033",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "923fbf58bb6ef545b19695741f064a9aa359f9470890120674a56476d43e58a6"
+    },
+    {
+      "id": "test-inhibitor-1034",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "83734cf84a9cba383f7edcece4870ce79501848292c67491447aec58e91564cf"
+    },
+    {
+      "id": "test-inhibitor-1035",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "60c0a7a219c4499a09011ab01b15ad7514b8550cbb29093402a3f17fba76df58"
+    },
+    {
+      "id": "test-inhibitor-1036",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "8916be837f9efeb4879905d56c2738decef3e1cf4fde7117ad875d77bc0ef4e5"
+    },
+    {
+      "id": "test-inhibitor-1037",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "fc07a301822e72441b117880f4b66f585a7c86a8eb1ce049aaf1c0eb296a4b12"
+    },
+    {
+      "id": "test-inhibitor-1038",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "789392d8ac2b69b8b7c4d3c97c5b175f57bbbd328bcf061768a6f372e8a07bc9"
+    },
+    {
+      "id": "test-inhibitor-1039",
+      "split": "test",
+      "family": "inhibitor",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "11cf103a5f8393921e87ed493ce19730fc62d309b34307e92c9b382ed0c41b62"
+    },
+    {
+      "id": "test-alternative-1000",
+      "split": "test",
+      "family": "alternative",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "161d275d519cfe376268893b9ec6a2a58e6e2ef293f01d10a0144be1b08cc604"
+    },
+    {
+      "id": "test-alternative-1001",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "2377ba8349472fd0e1dc9dc6850969e6ec678d71360572636a13fa2ddcff369c"
+    },
+    {
+      "id": "test-alternative-1002",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "471d918acaed6e02cdab2b94a4c616b08897acfd3bdc3817e4b225e04ec44d29"
+    },
+    {
+      "id": "test-alternative-1003",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "d0fcc464b5e889cf78305d7d2b9378aeda44f1c834af5d39406a496bb5a18ccf"
+    },
+    {
+      "id": "test-alternative-1004",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "1dd7aa24cc19551055a259d5992d88c4a43bf94d1ae5ea6ee963266086e34202"
+    },
+    {
+      "id": "test-alternative-1005",
+      "split": "test",
+      "family": "alternative",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "3c47b4562f1a4918a5bcc11ec620ccd9b5357ad365c9e5854624255b014886d0"
+    },
+    {
+      "id": "test-alternative-1006",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "12073d49339f3bfd835628400a3b35e0d6666c92678c54a220b0c19b98fa9cb7"
+    },
+    {
+      "id": "test-alternative-1007",
+      "split": "test",
+      "family": "alternative",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "d7085986e7057de362124bba1fd3b61bd12cf7e4f08cd9ceed15212851c938a5"
+    },
+    {
+      "id": "test-alternative-1008",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "01d1c5c9198a82c08e2869869472a2685b9bc61bf36defa14f579ca48d2cc388"
+    },
+    {
+      "id": "test-alternative-1009",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "88568f579b01b04ac6a2a5a4617a38932c053c0fb0541bb52009f4ff454c26f2"
+    },
+    {
+      "id": "test-alternative-1010",
+      "split": "test",
+      "family": "alternative",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "2f4a29cb43986eb111ced6d9db9cee4fa243179c0f579f4414cb5234461836e7"
+    },
+    {
+      "id": "test-alternative-1011",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "39d98d5165c246133d42f8f1988999fc59359c0e514b16bcc19e84c5e09d1f7a"
+    },
+    {
+      "id": "test-alternative-1012",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "052c1a14abf38c7a3b04d247a6d1755d08c8b4df64348f27f2d20b1aaf4c24ab"
+    },
+    {
+      "id": "test-alternative-1013",
+      "split": "test",
+      "family": "alternative",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "f65c299a28b780d2de7b2f7c2c9e12beeba50613cb9d4b831b6a292758f3baba"
+    },
+    {
+      "id": "test-alternative-1014",
+      "split": "test",
+      "family": "alternative",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "62110b3ac0ff0b0c8d29e1b3957cecf2d9a8a399997ad5155cde1d4cfe54d83c"
+    },
+    {
+      "id": "test-alternative-1015",
+      "split": "test",
+      "family": "alternative",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "2f2bf72dbfeb17bc0666d19dff6051746391bedce0c63e2a54e5a35c176910c7"
+    },
+    {
+      "id": "test-alternative-1016",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "c9837870817f03e2465dbbe812c88bb7b9425d2805d782ef75e119dc40f40494"
+    },
+    {
+      "id": "test-alternative-1017",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "3878d0e43074251e2e83f676bc45c384457ca9be28833ae6826c4d1eb8a01e6f"
+    },
+    {
+      "id": "test-alternative-1018",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "adbbe74174e18abe5ad40dbc438a7018fec3442746314048cc6cd801956dca53"
+    },
+    {
+      "id": "test-alternative-1019",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "5e064d53f3e63c629173ac94c9f381a7395d81e47e902086ca6de6722a87790a"
+    },
+    {
+      "id": "test-alternative-1020",
+      "split": "test",
+      "family": "alternative",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "343f9aebcf5664409bdc8a6e8e50fa7fdc76f4c8920f3556811efd24c0b785bd"
+    },
+    {
+      "id": "test-alternative-1021",
+      "split": "test",
+      "family": "alternative",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "7406c31ff1bf85264a5ebef5155d82bcd97d3293d0bfd31360c9a9d295366ec1"
+    },
+    {
+      "id": "test-alternative-1022",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "0b711d0bc240d41bc308290e4c3f016c76a52c018385f3a3c891e94c8705633d"
+    },
+    {
+      "id": "test-alternative-1023",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "ccdc90729ec8a79d0b63fa569e4533f55e8886e5131f000c9c067c51f8e8d924"
+    },
+    {
+      "id": "test-alternative-1024",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "06ce80e6f2b900e2e0bebb16b79ea335f0e81f5a1912c1308217c47b2bf66764"
+    },
+    {
+      "id": "test-alternative-1025",
+      "split": "test",
+      "family": "alternative",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "3a5934415cb6f9e03acd0a9fc6926687caf8297a2bf08517117abe0a1b81ee1b"
+    },
+    {
+      "id": "test-alternative-1026",
+      "split": "test",
+      "family": "alternative",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "33d10c9214985229f30a894533c900559b454c5bfcb53c31e1671a62819ea94f"
+    },
+    {
+      "id": "test-alternative-1027",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "f60bdeac9b9ea1650595f1485934c5910f965b4ebc8ca4f6ad2ba02aed3472fc"
+    },
+    {
+      "id": "test-alternative-1028",
+      "split": "test",
+      "family": "alternative",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "3d66970add9273d53bf95b35ba8b2e683f0c5d27c1e9ab03ebaf1526348d3d37"
+    },
+    {
+      "id": "test-alternative-1029",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "065a4a9bfd53a17a0929508a035fc65f69b9afdff182e3d624ee0dd029a2030e"
+    },
+    {
+      "id": "test-alternative-1030",
+      "split": "test",
+      "family": "alternative",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "3d9ecb1b3e1a5db104cfddbea3b8df6216bbf900498cdb639a3e6a9c2875a820"
+    },
+    {
+      "id": "test-alternative-1031",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "6304dc4e8c39a77964dbc3b5b1756bcc1b80285a3223d3fce4368079f7781132"
+    },
+    {
+      "id": "test-alternative-1032",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "2d016396130d158bbc10cf0f05bb3447247adb73d2c54b50c04a8f190b6355a7"
+    },
+    {
+      "id": "test-alternative-1033",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "f7d3e70b607c22cb91391f158f2c7186feb1da2325ff29d36a383a20d86f8bac"
+    },
+    {
+      "id": "test-alternative-1034",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "b01fc2be6941bd1898969cbd524c55858d38d9f76cfe59e5e9033a3b78f4d384"
+    },
+    {
+      "id": "test-alternative-1035",
+      "split": "test",
+      "family": "alternative",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "dba749c98656fd2f65de160e22fc7ea21fda78cf5b65b0492eb99e6443fd0059"
+    },
+    {
+      "id": "test-alternative-1036",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "eba9505334aabfdf96e8fb8f5a301ca2ac8434368c53e3884c8654f298e3834b"
+    },
+    {
+      "id": "test-alternative-1037",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "2f13282c4e0ca39f26988121640a52b457459752f71feb4ab7e7f424de602408"
+    },
+    {
+      "id": "test-alternative-1038",
+      "split": "test",
+      "family": "alternative",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "ae846f74b569c663dc5f066b051bbe8e24005383c9842570413b416a5b51ab0f"
+    },
+    {
+      "id": "test-alternative-1039",
+      "split": "test",
+      "family": "alternative",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "1cb6267904c2f8e7a34653671422a2a1d4b732729696737083e093f77502d082"
+    },
+    {
+      "id": "test-reversible-1000",
+      "split": "test",
+      "family": "reversible",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "9d2c6282e3f2cd149a679365ddf2ce73fbb9e34a44b54ba3de9c3a2180aae4e8"
+    },
+    {
+      "id": "test-reversible-1001",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "b3d4fb65083cc0e281aa883c70a9c9cc56009ded788a19ae24d4a6a4607c774c"
+    },
+    {
+      "id": "test-reversible-1002",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "0ebe9aa00413a69805b281407684088d6a8d95f8b2bd1b7a4ead3b5e1d158d83"
+    },
+    {
+      "id": "test-reversible-1003",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "847d4a458aa936824e5b3a81c44bd13f05bf566ccf81c1a83e2b5abfae891d98"
+    },
+    {
+      "id": "test-reversible-1004",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "e630ae3eb04d63ed9621a423226a237fe189ffe59b6d67cfa55e1c3b8ab1b1ea"
+    },
+    {
+      "id": "test-reversible-1005",
+      "split": "test",
+      "family": "reversible",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "e64a13d871ee7e2da5655fd0fe5f524ca50859bc5ee6f1123dbf4e200ece3118"
+    },
+    {
+      "id": "test-reversible-1006",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "489b94877ec4c855640fbc6860f3d5885012f1a88146846acc95f39b27eaadca"
+    },
+    {
+      "id": "test-reversible-1007",
+      "split": "test",
+      "family": "reversible",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "564729e045ec6d3ecd74695708e5da43d7ec508c2cec41ba41e92b3f395aa443"
+    },
+    {
+      "id": "test-reversible-1008",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "45c30ee2156831fc4e9347c63791633abfebad29be515e51bfba865cacbc0728"
+    },
+    {
+      "id": "test-reversible-1009",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "77a8bfa0a9b1b6549ace7657e1ba66dabbfe5df358ed8a4c860049a762eec231"
+    },
+    {
+      "id": "test-reversible-1010",
+      "split": "test",
+      "family": "reversible",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "c2ede6b0752764deac1dffde7587d4c485380b9cfbd5d93a722f5607dca51d1b"
+    },
+    {
+      "id": "test-reversible-1011",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "1ce8804f33b3142083ded1b34b59b2536e01e56c6893208c3fb69a51e36bfd08"
+    },
+    {
+      "id": "test-reversible-1012",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "faa991328ec10574a11effae4744211ac9a008f2f0ef658791fcb79bd8575edf"
+    },
+    {
+      "id": "test-reversible-1013",
+      "split": "test",
+      "family": "reversible",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "106a7f497cb439e8c0f30efb59396dd149014599185c40cb5b8df6a9c5cf2a98"
+    },
+    {
+      "id": "test-reversible-1014",
+      "split": "test",
+      "family": "reversible",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "ad34839bdcdb956e5596abdb06b72755780c57ddadc112974ca2e8fb0955a178"
+    },
+    {
+      "id": "test-reversible-1015",
+      "split": "test",
+      "family": "reversible",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "ea4741d89f3980ffc8b0b9f69f10da97c7e6c5d7718069b72dbb01ff3d2e140f"
+    },
+    {
+      "id": "test-reversible-1016",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "861793371367830488fc4d5ffc5426307aaa10baa4d2ef05dc79ea97ddabf2ba"
+    },
+    {
+      "id": "test-reversible-1017",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "9b78c22d4da8e8de8594c75a6769c9efda3243a1b2c2c2f8f9ed916268b06803"
+    },
+    {
+      "id": "test-reversible-1018",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "397491a10d58fcf1e32d6f77b02f3087136bf36bccc3bb481f32ebc09a034d67"
+    },
+    {
+      "id": "test-reversible-1019",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "1d1c88fdf06373390fb9386580f88b8ce13938523f165cf6f35af5439779681b"
+    },
+    {
+      "id": "test-reversible-1020",
+      "split": "test",
+      "family": "reversible",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "f2b77c5257eafb66d344af4d0c4d2f2d5c693d93bc4bf067dd4bd06dc1b912dd"
+    },
+    {
+      "id": "test-reversible-1021",
+      "split": "test",
+      "family": "reversible",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "7d15fd8b2a2eb059de175831f3647d62b626dcff415a743e225444460e15528f"
+    },
+    {
+      "id": "test-reversible-1022",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "1a0eeae2d4884ed957a51ac6fee638af36a7d90e0c2af108be2b5698687ee43c"
+    },
+    {
+      "id": "test-reversible-1023",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "fea3cc358318e76ff7a1bae241636325c075aa0bf23ad53e9f0429c2b62da48a"
+    },
+    {
+      "id": "test-reversible-1024",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "3ffeb3571e5bc0da979e92055fd42f1022acf044703a7399558e1cfb8f60adc2"
+    },
+    {
+      "id": "test-reversible-1025",
+      "split": "test",
+      "family": "reversible",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "4e93a4f1686ac45a04981121e2ee667d0d375edae9d2477fe37b5e59150528c6"
+    },
+    {
+      "id": "test-reversible-1026",
+      "split": "test",
+      "family": "reversible",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "3677af578e029db6736acfe83d7884fec8a53cc02c95a5ef3d9449c74ab7082f"
+    },
+    {
+      "id": "test-reversible-1027",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "47f280b4335ae0770d84667663ef63a19d798ecd3bcf79d029fd4b0ed94d7a0b"
+    },
+    {
+      "id": "test-reversible-1028",
+      "split": "test",
+      "family": "reversible",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "879dff76d80686d1bf7ff5be2156e2e4a3dab63f7de9908466673523e90b0b6a"
+    },
+    {
+      "id": "test-reversible-1029",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "8d44f28c55fef863046d1013a64398fae169916f6b9f797ce4705fa917b4a19b"
+    },
+    {
+      "id": "test-reversible-1030",
+      "split": "test",
+      "family": "reversible",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "f9a03b1cba8f3b70ef56b79bb1685563c9bdc60adc35a81dd40f9beb59711f03"
+    },
+    {
+      "id": "test-reversible-1031",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "b5836b98edf5e39d73a7b300651cf5cfd3ed293c69a5fec6b718ab3d1114db9d"
+    },
+    {
+      "id": "test-reversible-1032",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "605ac9352b7e71764b10e373d6e459e091d6ae826f4d88adab542ece8dd0a089"
+    },
+    {
+      "id": "test-reversible-1033",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "eab732fbc97d15bade8d4d740219ef8b58c6f9b7e40e20289d7acaeb01202500"
+    },
+    {
+      "id": "test-reversible-1034",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "cad007c9414246680d5db7531755b4806731bc953ed7a25eeaa639403d64e33a"
+    },
+    {
+      "id": "test-reversible-1035",
+      "split": "test",
+      "family": "reversible",
+      "label": "FALSE",
+      "labelSource": "independent-executor-v1",
+      "digest": "f7915b1fa1003b13296e92bf575c5ef2224ccb45bcc7eeb3b065eb8ffadf30f1"
+    },
+    {
+      "id": "test-reversible-1036",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "30b0f625f11bec16451e4410b0cd3c525e6487306d38e01020dae151c7ea0605"
+    },
+    {
+      "id": "test-reversible-1037",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "82e3c057294dd712ab3a585349af22241e5351fa0282128eedf8534c373f82d9"
+    },
+    {
+      "id": "test-reversible-1038",
+      "split": "test",
+      "family": "reversible",
+      "label": "TRUE",
+      "labelSource": "independent-executor-v1",
+      "digest": "4205e682d5ed3233c35b9f3b29eb4b5758056259b3a984061b076efc16247248"
+    },
+    {
+      "id": "test-reversible-1039",
+      "split": "test",
+      "family": "reversible",
+      "label": "UNKNOWN",
+      "labelSource": "independent-executor-v1",
+      "digest": "ec6783faa64600ff9a461503285ac953e5cf992444cbfcdcaa71e8e9fe886f6a"
+    }
+  ],
+  "limitations": [
+    "Families are structurally isolated, not merely different seeds.",
+    "Within-family topology repeats. 120 heldout records are not 120 independent task families.",
+    "Labels are deterministic executor outcomes, not independently reviewed human judgments."
+  ]
+}

@@ -5,6 +5,7 @@ import { runCircuit } from './engine.js';
 import { validateCircuit } from './validation.js';
 import { toMermaid } from './compose.js';
 import { LocalJevProvider, TypeSafeProvider, MockProvider } from './providers/index.js';
+import { researchCommands, researchMain } from './research-cli.js';
 import type { Provider } from './types.js';
 
 const help = `jev-gates — composable semantic logic circuits
@@ -14,6 +15,15 @@ const help = `jev-gates — composable semantic logic circuits
   jev-gates run circuit.json --input input.json --mock answers.json
   jev-gates run circuit.json --input input.json --provider localjev|typesafe
 
+Research workbench:
+  jev-gates research-demo [research|incident|planning|world] --variant normal --out artifact.json
+  jev-gates verify-report artifact.json
+  jev-gates replay artifact.json
+  jev-gates evaluate --out evaluation.json
+  jev-gates live-smoke localjev --out local-smoke.json
+  jev-gates workbench
+  npm run workbench
+
 Options: --model ID --base-url URL (localjev) --trace FILE --max-calls N --timeout-ms N
 Cloud calls require TYPESAFE_API_KEY. A provider must be selected explicitly.
 Run exit codes: 0 = all outputs known (TRUE or FALSE), 2 = invalid input, 3 = UNKNOWN.
@@ -21,6 +31,14 @@ Run exit codes: 0 = all outputs known (TRUE or FALSE), 2 = invalid input, 3 = UN
 const readJson = async (path: string) => JSON.parse(await readFile(path, 'utf8'));
 async function main() {
   const [command, path, ...args] = process.argv.slice(2);
+  if (command === 'workbench') {
+    if (path) throw new Error('workbench uses PORT and JEV_RUN_DIR environment options');
+    const { startWorkbench } = await import('./workbench-server.js');
+    const app = await startWorkbench(); console.log(`JEV 工作台 ${app.url}`);
+    for (const signal of ['SIGINT', 'SIGTERM'] as const) process.once(signal, () => { void app.close().then(() => process.exit(0)); });
+    return;
+  }
+  if (command && researchCommands.includes(command)) { await researchMain(process.argv.slice(2)); return; }
   if (!command || command === '--help' || command === '-h') { console.log(help); return; }
   if (!['validate', 'graph', 'run'].includes(command) || !path) throw new Error('Expected a command and circuit file. Use --help.');
   const opts = new Map<string, string>();

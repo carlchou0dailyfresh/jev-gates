@@ -27,6 +27,27 @@ flowchart LR
     C --> V[工具執行與結果驗證]
 ```
 
+## 本機語意研究工作台
+
+需要 Node.js 22.12+（或 24+）。在 repository 根目錄執行：
+
+```sh
+npm ci
+npm run workbench
+```
+
+開啟 `http://127.0.0.1:4317`。四個繁體中文情境不需金鑰即可用 fixture 操作；UI 依賴在 `ui/`，核心函式庫沒有 React 執行期依賴。
+
+```sh
+npm run research:demo
+node dist/cli.js verify-report .jev-runs/<runId>.json
+node dist/cli.js replay .jev-runs/<runId>.json
+npm run research:eval
+npm run research:smoke  # 一次既有本機 LocalJev 推論，不自動改用雲端
+```
+
+安裝已打包套件後，也可用 `jev-gates workbench` 啟動隨附介面。完整操作、資料保存、預算與研究界線見 [工作台操作手冊](docs/workbench.md)、[情境導覽](docs/scenarios.md)、[評測協議](docs/eval-protocol.md)。fixture、工作流程完成與真實模型品質分開呈現；本工作台沒有已驗證 AGI 的主張。
+
 ## 先跑離線範例
 
 下載專案後執行；已有本地專案時，可以直接從 `npm install` 開始：

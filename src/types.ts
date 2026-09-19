@@ -9,7 +9,7 @@ export type Answer =
   | { type: 'noul'; noul: number }
   | { type: 'choice'; choice: string; probabilities: Record<string, number>; confidence: number }
   | { type: 'score'; score: number; probabilities: Record<string, number>; legend: Record<string, string>; confidence: number };
-export interface EvaluationOptions { signal?: AbortSignal }
+export interface EvaluationOptions { signal?: AbortSignal; /** Optional local capture. Never includes headers or credentials. */ onTransport?: (capture: { request: Json; response: Json }) => void }
 export interface ProviderResponse {
   model: string;
   answers: Record<string, Answer>;

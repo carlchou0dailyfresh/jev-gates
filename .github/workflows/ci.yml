@@ -19,4 +19,12 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run demo
+      - run: npm run research:demo
+      - run: npm run research:eval
+      - run: npm --prefix ui ci
+      - run: npm --prefix ui run build
+      - run: npm --prefix ui exec -- playwright install --with-deps chromium
+        if: matrix.node == 24
+      - run: npm --prefix ui run test:browser
+        if: matrix.node == 24
       - run: npm pack --dry-run

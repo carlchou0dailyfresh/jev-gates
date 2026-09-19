@@ -1,0 +1,329 @@
+{
+  "schemaVersion": "1.0",
+  "protocolDigest": "1e38d6e63c636b129dc7bc777abe7b0b6a75a029c6d46c83a5ba926cd842448c",
+  "status": "passed",
+  "scope": "deterministic-engineering-only",
+  "cases": [
+    {
+      "id": "research/normal",
+      "passed": true,
+      "checkedOutputs": 7,
+      "providerFailures": 0
+    },
+    {
+      "id": "research/missing",
+      "passed": true,
+      "checkedOutputs": 7,
+      "providerFailures": 0
+    },
+    {
+      "id": "research/conflict",
+      "passed": true,
+      "checkedOutputs": 7,
+      "providerFailures": 0
+    },
+    {
+      "id": "research/fault",
+      "passed": true,
+      "checkedOutputs": 7,
+      "providerFailures": 6
+    },
+    {
+      "id": "research/stale",
+      "passed": true,
+      "checkedOutputs": 7,
+      "providerFailures": 0
+    },
+    {
+      "id": "research/out-of-scope",
+      "passed": true,
+      "checkedOutputs": 7,
+      "providerFailures": 0
+    },
+    {
+      "id": "research/tight-budget",
+      "passed": true,
+      "checkedOutputs": 7,
+      "providerFailures": 0
+    },
+    {
+      "id": "research/long-context",
+      "passed": true,
+      "checkedOutputs": 7,
+      "providerFailures": 0
+    },
+    {
+      "id": "research/counterexample",
+      "passed": true,
+      "checkedOutputs": 7,
+      "providerFailures": 0
+    },
+    {
+      "id": "research/privacy-evidence",
+      "passed": true,
+      "checkedOutputs": 7,
+      "providerFailures": 0
+    },
+    {
+      "id": "research/latency-failed",
+      "passed": true,
+      "checkedOutputs": 7,
+      "providerFailures": 0
+    },
+    {
+      "id": "research/replication",
+      "passed": true,
+      "checkedOutputs": 7,
+      "providerFailures": 0
+    },
+    {
+      "id": "research/public-source",
+      "passed": true,
+      "checkedOutputs": 0,
+      "providerFailures": 0
+    },
+    {
+      "id": "incident/normal",
+      "passed": true,
+      "checkedOutputs": 4,
+      "providerFailures": 0
+    },
+    {
+      "id": "incident/missing",
+      "passed": true,
+      "checkedOutputs": 4,
+      "providerFailures": 0
+    },
+    {
+      "id": "incident/conflict",
+      "passed": true,
+      "checkedOutputs": 4,
+      "providerFailures": 0
+    },
+    {
+      "id": "incident/fault",
+      "passed": true,
+      "checkedOutputs": 4,
+      "providerFailures": 1
+    },
+    {
+      "id": "incident/stale",
+      "passed": true,
+      "checkedOutputs": 4,
+      "providerFailures": 0
+    },
+    {
+      "id": "incident/config-change",
+      "passed": true,
+      "checkedOutputs": 4,
+      "providerFailures": 0
+    },
+    {
+      "id": "incident/upstream-failure",
+      "passed": true,
+      "checkedOutputs": 4,
+      "providerFailures": 0
+    },
+    {
+      "id": "incident/timeout-after-applied",
+      "passed": true,
+      "checkedOutputs": 4,
+      "providerFailures": 0
+    },
+    {
+      "id": "incident/verification-failed",
+      "passed": true,
+      "checkedOutputs": 4,
+      "providerFailures": 0
+    },
+    {
+      "id": "incident/execute-failed",
+      "passed": true,
+      "checkedOutputs": 4,
+      "providerFailures": 0
+    },
+    {
+      "id": "incident/healthy",
+      "passed": true,
+      "checkedOutputs": 4,
+      "providerFailures": 0
+    },
+    {
+      "id": "incident/mixed-signals",
+      "passed": true,
+      "checkedOutputs": 4,
+      "providerFailures": 0
+    },
+    {
+      "id": "planning/normal",
+      "passed": true,
+      "checkedOutputs": 2,
+      "providerFailures": 0
+    },
+    {
+      "id": "planning/missing",
+      "passed": true,
+      "checkedOutputs": 2,
+      "providerFailures": 0
+    },
+    {
+      "id": "planning/conflict",
+      "passed": true,
+      "checkedOutputs": 2,
+      "providerFailures": 0
+    },
+    {
+      "id": "planning/fault",
+      "passed": true,
+      "checkedOutputs": 2,
+      "providerFailures": 1
+    },
+    {
+      "id": "planning/low-energy",
+      "passed": true,
+      "checkedOutputs": 2,
+      "providerFailures": 0
+    },
+    {
+      "id": "planning/short-window",
+      "passed": true,
+      "checkedOutputs": 2,
+      "providerFailures": 0
+    },
+    {
+      "id": "planning/instrument-off",
+      "passed": true,
+      "checkedOutputs": 2,
+      "providerFailures": 0
+    },
+    {
+      "id": "planning/no-radio",
+      "passed": true,
+      "checkedOutputs": 2,
+      "providerFailures": 0
+    },
+    {
+      "id": "planning/extra-goal",
+      "passed": true,
+      "checkedOutputs": 2,
+      "providerFailures": 0
+    },
+    {
+      "id": "planning/ample-budget",
+      "passed": true,
+      "checkedOutputs": 2,
+      "providerFailures": 0
+    },
+    {
+      "id": "planning/exact-budget",
+      "passed": true,
+      "checkedOutputs": 2,
+      "providerFailures": 0
+    },
+    {
+      "id": "planning/invalid-proposal",
+      "passed": true,
+      "checkedOutputs": 2,
+      "providerFailures": 0
+    },
+    {
+      "id": "world/normal",
+      "passed": true,
+      "checkedOutputs": 1,
+      "providerFailures": 0
+    },
+    {
+      "id": "world/missing",
+      "passed": true,
+      "checkedOutputs": 1,
+      "providerFailures": 0
+    },
+    {
+      "id": "world/conflict",
+      "passed": true,
+      "checkedOutputs": 1,
+      "providerFailures": 0
+    },
+    {
+      "id": "world/fault",
+      "passed": true,
+      "checkedOutputs": 1,
+      "providerFailures": 1
+    },
+    {
+      "id": "world/renamed",
+      "passed": true,
+      "checkedOutputs": 1,
+      "providerFailures": 0
+    },
+    {
+      "id": "world/distractors",
+      "passed": true,
+      "checkedOutputs": 1,
+      "providerFailures": 0
+    },
+    {
+      "id": "world/inhibitor",
+      "passed": true,
+      "checkedOutputs": 1,
+      "providerFailures": 0
+    },
+    {
+      "id": "world/alternative",
+      "passed": true,
+      "checkedOutputs": 1,
+      "providerFailures": 0
+    },
+    {
+      "id": "world/reversible",
+      "passed": true,
+      "checkedOutputs": 1,
+      "providerFailures": 0
+    },
+    {
+      "id": "world/blocked",
+      "passed": true,
+      "checkedOutputs": 1,
+      "providerFailures": 0
+    },
+    {
+      "id": "world/one-shot",
+      "passed": true,
+      "checkedOutputs": 1,
+      "providerFailures": 0
+    },
+    {
+      "id": "world/new-family",
+      "passed": true,
+      "checkedOutputs": 1,
+      "providerFailures": 0
+    }
+  ],
+  "worldDataset": {
+    "generatorVersion": "world-v1",
+    "splitVersion": "family-isolated-v1",
+    "total": 192,
+    "heldout": 120,
+    "families": {
+      "train": [
+        "chain"
+      ],
+      "dev": [
+        "conjunction"
+      ],
+      "calibration": [
+        "consumption"
+      ],
+      "test": [
+        "inhibitor",
+        "alternative",
+        "reversible"
+      ]
+    },
+    "digest": "411302fd76827e551388b61249239ef6730ce6d65b9481445bc8a42d213e8871",
+    "labelsVerified": true
+  },
+  "liveLocaljev": "not_run",
+  "liveTypesafe": "not_run",
+  "modelQuality": "not_evaluated"
+}

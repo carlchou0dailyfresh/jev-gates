@@ -7,3 +7,6 @@ coverage/
 *.tgz
 .DS_Store
 .jev-runs/
+output/
+.playwright-cli/
+ui/dist/
