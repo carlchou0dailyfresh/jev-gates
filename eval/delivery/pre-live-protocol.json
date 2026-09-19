@@ -1,0 +1,12 @@
+{
+  "recordedAt": "2026-09-19T23:01:43.983296+00:00",
+  "mode": "pre-live-demo-protocol",
+  "caseSha256": "357fc6845f08815ae8983deccde476a3ac069abfec63aeda5b7c8335c2b69df8",
+  "benchmarkSha256": "eb53012581de29d19796ec4450701f66f5b85a96eb91ff75cf3f795bcb5a50a0",
+  "thresholds": {
+    "falseAt": 0.2,
+    "trueAt": 0.8
+  },
+  "prices": "not supplied",
+  "purpose": "Bounded synthetic demonstration, not held-out evidence"
+}

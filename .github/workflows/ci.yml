@@ -23,6 +23,8 @@ jobs:
       - run: npm run research:demo
       - run: npm run research:eval
       - run: npm run studio:build
+      - run: npm run delivery:demo
+      - run: npm run delivery:verify
       - run: npm run studio:demo
       - run: npm run studio:verify-report -- .jev-runs/studio/research-demo.json
       - run: npm run studio:replay -- .jev-runs/studio/research-demo.json

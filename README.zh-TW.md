@@ -169,3 +169,7 @@ node examples/controller.mjs
 歡迎依 [CONTRIBUTING.md](CONTRIBUTING.md) 提交修改。CI 在 Node.js 22、24 執行離線測試與套件檢查；真實模型品質、本地服務可用性與外部工具仍需另行驗證。
 
 採 [MIT 授權](LICENSE)。
+
+## 配送路線實驗
+
+Studio 的 `/delivery` 頁面新增台北六站汽車配送：可編輯站點、容量與時間窗，取得 OSRM 道路資料，比較每次重算、規則去重、單層 JEV 與雙判斷 AND。提供模型與求解耗時、建議刷新次數及可調單價；少重算不等於已證明省錢。OSRM 不是即時車流，Google 路況需另設伺服器金鑰。詳見[實驗說明](docs/delivery-experiment.md)與[來源限制](docs/delivery-sources.md)。

@@ -3665,3 +3665,7 @@ h1 {
     width: auto;
   }
 }
+
+.delivery-entry { display: grid; gap: 6px; margin: 6px 0 26px; padding: 14px 16px; background: var(--forest); color: #fff; border-radius: 10px; font-size: 14px; text-decoration: none; }
+.delivery-entry span { color: #deeee5; font-size: 12px; }
+.delivery-entry:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }

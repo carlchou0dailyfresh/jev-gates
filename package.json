@@ -48,7 +48,8 @@
     "schemas",
     "workbench/dist",
     "workbench/server",
-    "workbench/scenarios.json"
+    "workbench/scenarios.json",
+    "workbench/delivery-scenario.json"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -67,7 +68,9 @@
     "studio:start": "node workbench/server/dev.mjs --production",
     "studio:demo": "npm run build && node workbench/server/research.mjs demo",
     "studio:verify-report": "node workbench/server/research.mjs verify-report",
-    "studio:replay": "node workbench/server/research.mjs replay"
+    "studio:replay": "node workbench/server/research.mjs replay",
+    "delivery:demo": "npm run build && node workbench/server/delivery-research.mjs demo",
+    "delivery:verify": "node workbench/server/delivery-research.mjs verify"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

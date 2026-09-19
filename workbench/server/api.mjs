@@ -317,3 +317,7 @@ export function createApi(options = {}) {
     finally { if (counted) active--; }
   };
 }
+
+/** Shared loopback boundary for the delivery research surface. */
+export { checkRequest as checkLocalRequest, readBody as readApiBody };
+export async function workbenchHealth(options = {}) { return createWorkbench(options).health(); }

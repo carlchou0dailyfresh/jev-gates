@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "title": "台北六站配送演練",
+  "description": "使用台北公共地標周邊的約略座標，演示單一汽車在容量與時間窗限制下規劃路線。所有訂單、需求、時間窗與訊息均為合成資料；地標不是客戶，座標不代表可停靠位置或已確認入口。固定矩陣是幾何估算，不是道路或即時交通資料。",
+  "synthetic": true,
+  "draft": {
+    "depot": { "id": "depot", "name": "台北車站周邊・示意起點", "lat": 25.0468, "lng": 121.5172 },
+    "stops": [
+      { "id": "huashan", "name": "華山1914周邊", "lat": 25.0441, "lng": 121.5298, "earliest": 540, "latest": 630, "serviceMinutes": 8, "demand": 2 },
+      { "id": "cks", "name": "中正紀念堂周邊", "lat": 25.0355, "lng": 121.5196, "earliest": 540, "latest": 615, "serviceMinutes": 7, "demand": 3 },
+      { "id": "arena", "name": "台北小巨蛋周邊", "lat": 25.0520, "lng": 121.5500, "earliest": 555, "latest": 650, "serviceMinutes": 8, "demand": 2 },
+      { "id": "songshan", "name": "松山文創園區周邊", "lat": 25.0439, "lng": 121.5594, "earliest": 570, "latest": 670, "serviceMinutes": 10, "demand": 2 },
+      { "id": "sys", "name": "國父紀念館周邊", "lat": 25.0396, "lng": 121.5596, "earliest": 560, "latest": 650, "serviceMinutes": 7, "demand": 1 },
+      { "id": "taipei101", "name": "台北101周邊", "lat": 25.0337, "lng": 121.5639, "earliest": 580, "latest": 680, "serviceMinutes": 10, "demand": 2 }
+    ],
+    "departureMinutes": 540,
+    "capacity": 14,
+    "returnToDepot": true
+  },
+  "events": [
+    { "id": "thanks", "kind": "note", "text": "謝謝配送同仁，今天辛苦了！", "expectedRefresh": false },
+    { "id": "thanks-copy", "kind": "note", "text": "謝謝配送同仁，今天辛苦了！", "expectedRefresh": false, "duplicateOf": "thanks" },
+    { "id": "entrance-change", "kind": "note", "text": "本次演練的松山文創園區周邊站點通知：原入口臨時關閉，請改走另一個入口；尚未提供新的可停靠座標。請先確認入口位置再重新規劃，不要直接猜測地址。", "expectedRefresh": true },
+    { "id": "earlier-deadline", "kind": "note", "text": "本次演練的台北101周邊站點通知：今天最晚可開始交付的時間提前到 09:40。這是文字通知，請先確認時間窗再套用結構化變更。", "expectedRefresh": true },
+    { "id": "unrelated-region", "kind": "note", "text": "群組轉貼：高雄的一場活動延後到下午。此消息未提到本次台北六站、車輛或任何共用道路。", "expectedRefresh": false },
+    { "id": "confirmed-window", "kind": "structured", "text": "演練控制台已確認：台北101周邊站點最晚服務時間改為 09:40。套用明確時間窗更新後重新計算。", "expectedRefresh": true, "patch": { "stopId": "taipei101", "latest": 580 } }
+  ]
+}
