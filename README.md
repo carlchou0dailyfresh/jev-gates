@@ -1,6 +1,6 @@
 # jev-gates
 
-**Delivery route experiment:** edit six Taipei landmark stops, compare four refresh policies on one road snapshot, and measure semantic overhead separately from route solving. Visit `/delivery` in Studio. OSRM roads are not live traffic; fixture results do not prove savings. [Experiment guide](docs/delivery-experiment.md).
+**JEV Maps:** choose an origin and destination at `/delivery` in Studio. A full-screen map combines OSRM road alternatives, manual Photon place search and automatically fetched public police traffic reports; uncertain reports remain visible as unverified. [Route guide](docs/simple-routes.md). The editable six-stop, four-policy research experiment remains at `/delivery/lab`. OSRM is not live traffic and demo results do not prove savings. [Experiment guide](docs/delivery-experiment.md).
 
 **New: JEV Studio** — a local interactive workbench with four synthetic scenarios, editable semantic gates and branches, LocalJev inference, and an Ollama language bridge. Run `npm ci`, `npm ci --prefix workbench`, then `npm run studio:dev` (Node 22.12+), and open `http://127.0.0.1:3088`. [Studio guide (繁體中文)](docs/studio.md). Fixture results do not establish real JEV accuracy or AGI capabilities.
 

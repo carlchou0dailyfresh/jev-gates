@@ -606,7 +606,7 @@ export default function App() {
             <small>SEMANTIC STUDIO</small>
           </span>
         </a>
-        <a className="delivery-entry" href="/delivery">配送路線實驗 <span>地圖與成本比較 ↗</span></a>
+        <a className="delivery-entry" href="/delivery">JEV Maps <span>路線與沿途通報 ↗</span></a>
         <div className="sidebar-section-label">
           探索情境 <span>04</span>
         </div>

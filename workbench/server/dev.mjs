@@ -5,6 +5,7 @@ import fs from 'node:fs/promises';
 import { createReadStream } from 'node:fs';
 import { createApi } from './api.mjs';
 import { createDeliveryApi } from './delivery-api.mjs';
+import { createSimpleRoutesApi } from './simple-routes.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const production = process.argv.includes('--production');
@@ -12,6 +13,7 @@ const port = Number(process.env.WORKBENCH_PORT ?? 3088);
 if (!Number.isInteger(port) || port < 1024 || port > 65535) throw new Error('WORKBENCH_PORT must be 1024–65535');
 const api = createApi();
 const deliveryApi = createDeliveryApi();
+const simpleRoutesApi = createSimpleRoutesApi();
 const vite = production ? null : await (await import('vite')).createServer({
   root, configFile: path.join(root, 'vite.config.ts'),
   server: { middlewareMode: true, host: '127.0.0.1', allowedHosts: ['localhost', '127.0.0.1'] },
@@ -25,6 +27,7 @@ const server = http.createServer(async (req, res) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   try {
+    if ((req.url ?? '').startsWith('/api/routes/')) { await simpleRoutesApi(req, res); return; }
     if ((req.url ?? '').startsWith('/api/delivery/')) { await deliveryApi(req, res); return; }
     if ((req.url ?? '').startsWith('/api/')) { await api(req, res); return; }
     if (vite) { vite.middlewares(req, res); return; }

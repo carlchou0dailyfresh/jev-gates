@@ -170,6 +170,8 @@ node examples/controller.mjs
 
 採 [MIT 授權](LICENSE)。
 
-## 配送路線實驗
+## 地圖路線助理與配送實驗
 
-Studio 的 `/delivery` 頁面新增台北六站汽車配送：可編輯站點、容量與時間窗，取得 OSRM 道路資料，比較每次重算、規則去重、單層 JEV 與雙判斷 AND。提供模型與求解耗時、建議刷新次數及可調單價；少重算不等於已證明省錢。OSRM 不是即時車流，Google 路況需另設伺服器金鑰。詳見[實驗說明](docs/delivery-experiment.md)與[來源限制](docs/delivery-sources.md)。
+Studio 的 `/delivery` 已改成滿版地圖：只選起終點即可規劃，手動搜尋 Photon 地點、自動抓取警廣公開事件，再以程式與 LocalJev 檢查沿線影響。事件不確定時保留原路線，不宣稱已避開封路。通報與判斷細節收在側面，見[簡化路線手冊](docs/simple-routes.md)。
+
+原台北六站汽車配送保留在 `/delivery/lab`：可編輯站點、容量與時間窗，取得 OSRM 道路資料，比較每次重算、規則去重、單層 JEV 與雙判斷 AND。提供模型與求解耗時、建議刷新次數及可調單價；少重算不等於已證明省錢。OSRM 不是即時車流，Google 路況需另設伺服器金鑰。詳見[實驗說明](docs/delivery-experiment.md)與[來源限制](docs/delivery-sources.md)。
