@@ -1,0 +1,5 @@
+{
+  "urgent": { "type": "noul", "noul": 0.91 },
+  "billing": { "type": "noul", "noul": 0.98 },
+  "abuse": { "type": "noul", "noul": 0.03 }
+}

@@ -1,0 +1,5 @@
+{
+  "impact": { "type": "score", "score": 1.8, "probabilities": { "0": 0.01, "1": 0.18, "2": 0.81 }, "legend": { "0": "Routine request; no business interruption described", "1": "Some work delayed; workaround remains available", "2": "Core business operation is blocked with an explicit deadline" }, "confidence": 0.75 },
+  "relevant_topic": { "type": "choice", "choice": "billing", "probabilities": { "billing": 0.88, "technical": 0.08, "other": 0.02, "unknown": 0.02 }, "confidence": 0.8 },
+  "review": { "type": "noul", "noul": 0.92 }
+}
