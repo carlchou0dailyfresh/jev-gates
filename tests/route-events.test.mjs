@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createRouteEvents, createRouteEventsProvider, normalizePbsEvents, parsePbsTime, PBS_EVENTS_URL, filterEventsNearRoute, pointToRouteDistanceMeters } from '../workbench/server/route-events.mjs';
+import { createRouteEvents, createRouteEventsProvider, normalizePbsEvents, parsePbsTime, PBS_EVENTS_URL, filterEventsNearRoute, pointToRouteDistanceMeters, classifyEventFreshness, projectCurrentEventFeed, CURRENT_EVENT_MAX_AGE_SECONDS } from '../workbench/server/route-events.mjs';
 
 const NOW = Date.parse('2026-09-19T23:30:00.000Z');
 const row = (extra = {}) => ({ UID: 'example-1', srcdetail: '測試來源', happendate: '2026-09-20', happentime: '07:00:00.0000000',
@@ -8,6 +8,75 @@ const row = (extra = {}) => ({ UID: 'example-1', srcdetail: '測試來源', happ
   comment: '合成測試通報，不是現場路況。', direction: '東向', region: 'N', ...extra });
 const response = (value, status = 200) => new Response(JSON.stringify(value), { status });
 const payload = (rows = [row()]) => ({ result: rows, count: rows.length, version: '1.0' });
+const localTime = at => new Date(at + 8 * 3600_000).toISOString().replace('T', ' ').replace('Z', '');
+
+test('current-event cutoff includes exactly 15 minutes and excludes one millisecond older or future', async () => {
+  assert.equal(CURRENT_EVENT_MAX_AGE_SECONDS, 900);
+  const rows = [row({ UID: 'boundary', modDttm: localTime(NOW - 900_000) }), row({ UID: 'old', modDttm: localTime(NOW - 900_001) }),
+    row({ UID: 'future', modDttm: localTime(NOW + 1) }), row({ UID: 'unknown', modDttm: '' })];
+  const result = await createRouteEvents({ now: () => NOW, fetchImpl: async () => response(payload(rows)) }).fetch();
+  assert.deepEqual(result.events.map(event => event.id), ['pbs:boundary']);
+  assert.equal(result.events[0].ageMinutes, 15); assert.equal(result.events[0].active, 'unknown');
+  assert.deepEqual(result.provenance.freshness.excluded, { stale: 1, unknown: 1, future: 1, total: 3 });
+  assert.equal(result.provenance.freshness.scope, 'source_feed'); assert.equal(result.provenance.freshness.eligibleCount, 1);
+});
+
+test('fresh fetch of yesterday reports remains no_recent_events with original source range', async () => {
+  const result = await createRouteEvents({ now: () => NOW, fetchImpl: async () => response(payload([row({ modDttm: localTime(NOW - 86400_000) })])) }).fetch();
+  assert.equal(result.status, 'available'); assert.deepEqual(result.events, []);
+  const provenance = result.provenance;
+  assert.equal(provenance.fetchedAt, new Date(NOW).toISOString());
+  assert.equal(provenance.freshness.sourceLatestUpdatedAt, new Date(NOW - 86400_000).toISOString());
+  assert.equal(provenance.freshness.status, 'no_recent_events'); assert.equal(provenance.freshness.excluded.stale, 1);
+  assert.equal(provenance.freshness.newestEligibleUpdatedAt, null);
+});
+
+test('cache reads recompute age and remove a report as it crosses the cutoff without fetching again', async () => {
+  let clock = NOW, requests = 0;
+  const provider = createRouteEvents({ now: () => clock, fetchImpl: async () => { requests++; return response(payload([row({ modDttm: localTime(NOW - 899_000) })])); } });
+  const first = await provider.fetch(); assert.equal(first.events.length, 1);
+  clock += 1001;
+  const cached = await provider.fetch();
+  assert.equal(requests, 1); assert.equal(cached.metrics.requests, 0); assert.equal(cached.provenance.cached, true);
+  assert.equal(cached.provenance.fetchedAt, first.provenance.fetchedAt); assert.deepEqual(cached.events, []);
+  assert.equal(cached.provenance.freshness.evaluatedAt, new Date(clock).toISOString());
+  assert.equal(cached.provenance.freshness.excluded.stale, 1); assert.equal(cached.provenance.freshness.status, 'no_recent_events');
+});
+
+test('future source timestamps are excluded even within a second; cached raw data is reclassified as time advances', async () => {
+  let clock = NOW, requests = 0;
+  const provider = createRouteEvents({ now: () => clock, fetchImpl: async () => { requests++; return response(payload([row({ modDttm: localTime(NOW + 30_000) })])); } });
+  const first = await provider.fetch(); assert.deepEqual(first.events, []); assert.equal(first.provenance.freshness.excluded.future, 1);
+  clock += 30_001; const next = await provider.fetch();
+  assert.equal(requests, 1); assert.equal(next.events.length, 1); assert.equal(next.provenance.freshness.excluded.future, 0);
+  assert.ok(next.events[0].ageMinutes > 0); assert.equal(next.provenance.fetchedAt, first.provenance.fetchedAt);
+});
+
+test('clock rollback invalidates source cache and cannot turn a future report into current', async () => {
+  let clock = NOW, requests = 0;
+  const provider = createRouteEvents({ now: () => clock, fetchImpl: async () => { requests++; return response(payload([row({ modDttm: localTime(NOW) })])); } });
+  assert.equal((await provider.fetch()).events.length, 1); clock -= 1000;
+  const result = await provider.fetch(); assert.equal(requests, 2); assert.deepEqual(result.events, []);
+  assert.equal(result.provenance.freshness.excluded.future, 1); assert.equal(result.provenance.cached, false);
+});
+
+test('freshness parsing refuses missing offsets, impossible calendar dates and invented recent flags', () => {
+  for (const updatedAt of [null, '', '2026-09-20 07:30:00', '2026-02-30T23:30:00Z', '2026-09-19T23:30:00+15:00', 'not a time']) {
+    assert.equal(classifyEventFreshness(updatedAt, NOW).reason, 'unknown');
+  }
+  assert.equal(classifyEventFreshness('2026-09-20T07:30:00+08:00', NOW).reason, 'current');
+  const result = projectCurrentEventFeed({ status: 'available', events: [{ freshness: 'recent', updatedAt: new Date(NOW - 900_001).toISOString() }], provenance: { fetchedAt: new Date(NOW).toISOString() } }, NOW);
+  assert.deepEqual(result.events, []); assert.equal(result.provenance.freshness.excluded.stale, 1);
+});
+
+test('a second freshness projection does not double count exclusions and updates counts for newly expired reports', () => {
+  const feed = { status: 'available', events: [{ id: 'old', updatedAt: new Date(NOW - 900_001).toISOString() }, { id: 'current', updatedAt: new Date(NOW - 899_000).toISOString() }], provenance: {} };
+  const first = projectCurrentEventFeed(feed, NOW), again = projectCurrentEventFeed(first, NOW);
+  assert.equal(again.provenance.freshness.excluded.total, 1); assert.equal(again.provenance.freshness.parsedCount, 2);
+  const expired = projectCurrentEventFeed(again, NOW + 1001);
+  assert.equal(expired.provenance.freshness.excluded.total, 2); assert.equal(expired.provenance.freshness.eligibleCount, 0);
+  assert.equal(expired.provenance.freshness.sourceLatestUpdatedAt, first.provenance.freshness.sourceLatestUpdatedAt);
+});
 
 test('PBS timestamp parsing is Taiwan-time explicit and rejects invalid dates rather than rolling over', () => {
   assert.equal(parsePbsTime('2026-09-20 07:20:28.447'), '2026-09-19T23:20:28.447Z');
@@ -97,6 +166,7 @@ test('failed refresh returns unavailable, never a stale list; repeated failure i
   const failed = await provider.fetch({ force: true });
   assert.equal(failed.status, 'unavailable'); assert.deepEqual(failed.events, []);
   assert.equal(failed.provenance.fetchedAt, null); assert.equal(failed.provenance.recordsReceived, null);
+  assert.equal(failed.provenance.freshness.status, 'unavailable'); assert.equal(failed.provenance.freshness.excluded.total, null);
   assert.match(failed.warnings[0], /不能解讀/);
   assert.equal((await provider.fetch()).metrics.requests, 0); assert.equal(requests, 2);
 });

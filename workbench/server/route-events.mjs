@@ -7,7 +7,8 @@ const MAX_RECORDS = 2000;
 const TTL_MS = 60_000;
 const TIMEOUT_MS = 10_000;
 const EARTH_METERS = 6_371_008.8;
-const RECENT_MS = 6 * 60 * 60_000;
+export const CURRENT_EVENT_MAX_AGE_SECONDS = 15 * 60;
+const RECENT_MS = CURRENT_EVENT_MAX_AGE_SECONDS * 1000;
 const USER_AGENT = 'JEV-Delivery-Studio/0.1 (+https://github.com/carlchou0dailyfresh/jev-gates)';
 const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 const clean = (value, limit = 4096) => typeof value === 'string' ? value.replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, '').trim().slice(0, limit) : '';
@@ -15,6 +16,68 @@ const clone = value => structuredClone(value);
 
 class EventsError extends Error {
   constructor(code, message) { super(message); this.code = code; }
+}
+
+function sourceTime(value) {
+  if (typeof value !== 'string') return NaN;
+  const match = value.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d{1,9})?(?:Z|([+-])(\d{2}):(\d{2}))$/);
+  if (!match) return NaN;
+  const [, yy, mo, dd, hh, mm, ss, , zoneHour = '0', zoneMinute = '0'] = match;
+  const [year, month, day, hour, minute, second] = [yy, mo, dd, hh, mm, ss].map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  if (year < 2000 || year > 2200 || month < 1 || month > 12 || day < 1 || hour > 23 || minute > 59 || second > 59
+    || Number(zoneHour) > 14 || Number(zoneMinute) > 59 || (Number(zoneHour) === 14 && Number(zoneMinute) !== 0)
+    || date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) return NaN;
+  return Date.parse(value);
+}
+
+/** Product display criterion only: a recent source update does not prove an incident is still active. */
+export function classifyEventFreshness(updatedAt, at = Date.now()) {
+  if (!Number.isFinite(Number(at))) throw new TypeError('The freshness clock must be finite.');
+  const sourceUpdatedMs = sourceTime(updatedAt), ageMs = Number(at) - sourceUpdatedMs;
+  const reason = !Number.isFinite(sourceUpdatedMs) ? 'unknown' : ageMs < 0 ? 'future' : ageMs > RECENT_MS ? 'stale' : 'current';
+  return { reason, ageMinutes: Number.isFinite(ageMs) && ageMs >= 0 ? ageMs / 60_000 : null, sourceUpdatedMs };
+}
+
+/** Keep history in process-local source cache only, never in the current-events API payload. */
+export function projectCurrentEventFeed(feed, at = Date.now()) {
+  if (!object(feed) || !Number.isFinite(Number(at))) throw new TypeError('Invalid event feed or freshness clock.');
+  const result = clone(feed), evaluatedAt = new Date(Number(at)).toISOString();
+  const provenance = object(result.provenance) ? result.provenance : {};
+  const policy = { scope: 'source_feed', policy: 'source_updated_within_15_minutes', maxAgeSeconds: CURRENT_EVENT_MAX_AGE_SECONDS, evaluatedAt };
+  if (result.status !== 'available') {
+    result.events = [];
+    result.provenance = { ...provenance, freshness: { ...policy, status: 'unavailable', eligibleCount: null, parsedCount: null,
+      excluded: { stale: null, unknown: null, future: null, total: null }, sourceLatestUpdatedAt: null, sourceOldestUpdatedAt: null,
+      newestEligibleUpdatedAt: null, oldestEligibleUpdatedAt: null } };
+    return result;
+  }
+  if (!Array.isArray(result.events) || result.events.length > MAX_RECORDS) throw new TypeError('Invalid event list.');
+  const prior = provenance.freshness?.policy === policy.policy && provenance.freshness?.scope === policy.scope ? provenance.freshness : null;
+  const excluded = { stale: prior?.excluded?.stale ?? 0, unknown: prior?.excluded?.unknown ?? 0, future: prior?.excluded?.future ?? 0, total: 0 };
+  const events = [], sourceTimes = [];
+  for (const event of result.events) {
+    const age = classifyEventFreshness(event?.updatedAt, at);
+    if (Number.isFinite(age.sourceUpdatedMs)) sourceTimes.push(age.sourceUpdatedMs);
+    if (age.reason !== 'current') { excluded[age.reason]++; continue; }
+    events.push({ ...event, ageMinutes: age.ageMinutes, freshness: 'recent' });
+  }
+  excluded.total = excluded.stale + excluded.unknown + excluded.future;
+  const eligibleTimes = events.map(event => sourceTime(event.updatedAt));
+  const earliest = times => times.length ? new Date(Math.min(...times)).toISOString() : null;
+  const latest = times => times.length ? new Date(Math.max(...times)).toISOString() : null;
+  result.events = events;
+  result.provenance = { ...provenance,
+    sourceUnlocatedCount: provenance.sourceUnlocatedCount ?? provenance.unlocatedCount ?? 0,
+    sourceSharedPointCount: provenance.sourceSharedPointCount ?? provenance.sharedPointCount ?? 0,
+    unlocatedCount: events.filter(event => event.locationQuality === 'unlocated').length,
+    sharedPointCount: events.filter(event => event.locationQuality === 'shared_point').length,
+    freshness: { ...policy, status: events.length ? 'current' : 'no_recent_events', eligibleCount: events.length,
+      parsedCount: prior?.parsedCount ?? feed.events.length, excluded,
+      sourceLatestUpdatedAt: prior?.sourceLatestUpdatedAt ?? latest(sourceTimes), sourceOldestUpdatedAt: prior?.sourceOldestUpdatedAt ?? earliest(sourceTimes),
+      newestEligibleUpdatedAt: latest(eligibleTimes), oldestEligibleUpdatedAt: earliest(eligibleTimes) },
+  };
+  return result;
 }
 
 /** PBS dates have no offset. Interpret documented Taiwan local times without host timezone dependence. */
@@ -51,9 +114,8 @@ export function normalizePbsEvents(payload, fetchedAt = Date.now()) {
     const latValue = reportedCoordinate(raw.y1, 20, 27), lngValue = reportedCoordinate(raw.x1, 117, 124);
     const located = latValue !== null && lngValue !== null;
     const updatedAt = parsePbsTime(raw.modDttm);
-    const updatedMs = updatedAt === null ? NaN : Date.parse(updatedAt);
-    const ageMs = Number(fetchedAt) - updatedMs;
-    const ageMinutes = Number.isFinite(ageMs) && ageMs >= -5 * 60_000 ? Math.max(0, ageMs / 60_000) : null;
+    const age = classifyEventFreshness(updatedAt, fetchedAt);
+    const ageMinutes = age.ageMinutes;
     const event = {
       id: `pbs:${clean(raw.UID, 128)}`,
       title: [category, road || area || text.split('\n')[0]].filter(Boolean).join(' · ').slice(0, 140),
@@ -68,7 +130,7 @@ export function normalizePbsEvents(payload, fetchedAt = Date.now()) {
       kind: kinds[category] || 'other', sourceCategory: category,
       credibility: 'reported', active: 'unknown', blocking: 'unknown',
       locationQuality: located ? 'reported_point' : 'unlocated',
-      freshness: ageMinutes === null ? 'unknown' : ageMs <= RECENT_MS ? 'recent' : 'older',
+      freshness: age.reason === 'current' ? 'recent' : age.reason === 'stale' ? 'older' : 'unknown',
       textTruncated: raw.comment.length > 4096,
     };
     const previous = byId.get(event.id);
@@ -159,18 +221,18 @@ export function createRouteEvents({ fetchImpl = globalThis.fetch, now = Date.now
   }
   function health() {
     return { provider: 'pbs', configured: true, sourceUrl: PBS_EVENTS_URL, referenceUrl: PBS_DATASET_URL,
-      label: '警廣公開事件通報', requiresKey: false, coverage: 'reported_incidents_only' };
+      label: '警廣公開事件通報', requiresKey: false, coverage: 'reported_incidents_only', currentEventMaxAgeSeconds: CURRENT_EVENT_MAX_AGE_SECONDS };
   }
   async function fetchEvents({ force = false, signal } = {}) {
     if (typeof force !== 'boolean') throw new TypeError('force must be a boolean.');
-    if (signal?.aborted) return unavailable(new EventsError('event_cancelled', '事件查詢已取消。'), timestamp(), 0, 0);
+    if (signal?.aborted) return projectCurrentEventFeed(unavailable(new EventsError('event_cancelled', '事件查詢已取消。'), timestamp(), 0, 0), timestamp());
     const startedAt = timestamp();
     if (!force && cache && startedAt >= cache.savedAt && startedAt - cache.savedAt < TTL_MS) {
-      return { ...clone(cache.result), provenance: { ...clone(cache.result.provenance), cached: true }, metrics: { requests: 0, elapsedMs: 0 } };
+      return projectCurrentEventFeed({ ...clone(cache.result), provenance: { ...clone(cache.result.provenance), cached: true }, metrics: { requests: 0, elapsedMs: 0 } }, startedAt);
     }
     if (inFlight) {
       const shared = await inFlight;
-      return { ...clone(shared), provenance: { ...clone(shared.provenance), sharedRequest: true }, metrics: { requests: 0, elapsedMs: 0 } };
+      return projectCurrentEventFeed({ ...clone(shared), provenance: { ...clone(shared.provenance), sharedRequest: true }, metrics: { requests: 0, elapsedMs: 0 } }, timestamp());
     }
     cache = null;
     const operation = (async () => {
@@ -197,7 +259,7 @@ export function createRouteEvents({ fetchImpl = globalThis.fetch, now = Date.now
       return result;
     })();
     inFlight = operation;
-    try { return clone(await operation); }
+    try { return projectCurrentEventFeed(await operation, timestamp()); }
     finally { if (inFlight === operation) inFlight = null; }
   }
   function unavailable(error, time, requests, elapsedMs) {

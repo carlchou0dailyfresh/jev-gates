@@ -19,15 +19,22 @@
 
 - `status: available` 表示本次有有效來源資料，事件數可為 0；`unavailable` 表示本次無法取得可用資料，不能解讀成沒有事件。
 - 回傳事件保留來源 URL、資料集 URL、原始文字、來源更新時間、抓取時間、來源分類、位置品質、`credibility: reported`。來源文字只作待評估資料，不能當作給模型的指令。
-- `freshness: recent` 只表示來源更新時間距抓取時刻不超過 6 小時；更舊為 `older`，缺失或超前本機時間 5 分鐘以上為 `unknown`。這個工程門檻不代表事件還在發生，也不會抹掉較舊通報。
+- 主頁只接收**來源更新在最近 15 分鐘內**的事件：`0 <= 現在 − updatedAt <= 900 秒`。這是本產品的顯示與模型輸入門檻，**不是警廣的更新 SLA，也不是即時車流或事件持續發生的保證**。來源更新時間不等於事件發生時間；昨天發生而今天更新的通報仍須顯示其原始時間、保持有效狀態待確認，不能改標成今天新發生的事故。
+- 超過 900 秒、缺失／無效更新時間，以及任何未來更新時間（即使只超前 1 毫秒）都不送入沿線清單、地圖或模型。它們僅以排除計數與來源時間範圍揭露。`fetchedAt` 是抓取時間，`sourceLatestUpdatedAt` 是來源通報最新更新時間，`evaluatedAt` 是本次重算時效的時間，三者不互相替代。
 - 固定官方端點，禁止重新導向，不接受任意使用者 URL。不傳送使用者位置、地點輸入或路線給事件來源。
 - 10 秒上限包含完整本文，最多 2 MiB、2,000 個原始項目。去除不合法項目並回報數量；整份非空資料完全無法解析時回 `unavailable`。
-- 成功與失敗皆使用 60 秒程序內快取，保留最初抓取時間；共享正在進行的請求，計算實際請求次數。強制重新整理失敗不會沿用舊清單冒充新資料。取消的查詢不快取。
+- 成功與失敗皆使用 60 秒程序內快取，保留最初抓取時間；共享正在進行的請求，計算實際請求次數。每次讀取快取都用目前時鐘重新篩選，事件跨過 15 分鐘界線後立即從回傳清單移除，沒有等下一次外部抓取。強制重新整理失敗不會沿用舊清單冒充新資料。取消的查詢不快取；時鐘倒退不會延長快取期限或把未來事件當作近期事件。
 - 沒有模型、地圖或事件來源的自動替代假資料，沒有請求重試。
 
 `filterEventsNearRoute(events, coordinates, radiusMeters = 500)` 使用 GeoJSON `[longitude, latitude]` 折線及球面點到線段距離，回傳附近事件與距離、無座標數、排除數、位置不確定數。它只判斷通報點與路線的接近程度，不證明同一條道路、行車方向、平面或高架層，也不證明道路被封閉。`shared_point` 會保留品質標記，不能作為確定封路證據。
 
 公開通報覆蓋不完整，沒有附近資料不是道路暢通或安全的證據。自動調整路線需要各必要邏輯閘都具足夠證據；位置或有效期間不明時應保留待確認，不能把 `UNKNOWN` 偷換成 `FALSE` 或成功。
+
+### 時效回應欄位
+
+`provenance.events.freshness`（直接使用事件提供者時為 `provenance.freshness`）的 `scope` 固定為 `source_feed`。其中 `eligibleCount`、`excluded.stale/unknown/future/total` 與 `parsedCount` 均針對整份來源，**不是使用者沿線事故數**；`sourceOldestUpdatedAt/sourceLatestUpdatedAt` 是可解析來源時間範圍，`oldestEligibleUpdatedAt/newestEligibleUpdatedAt` 是符合門檻的時間範圍。`status: current` 表示來源清單有符合門檻的通報；`no_recent_events` 表示沒有符合門檻的通報；`unavailable` 表示讀取失敗且數量未知，不能當成 0。
+
+路線回應另有 `provenance.events.routeFreshness`，其 `scope: candidate_routes` 表示全部已取得候選線附近的範圍，含 `eligibleCount`、`displayedCount`、`omittedCount` 與 `expiredDuringEvaluationCount`。尚未展示或未完成的候選保留待確認。服務在地理篩選前、模型送出前與路線選擇前重查時效；模型處理期間過期的事件與它的候選影響標記會移除，但已發生的模型請求仍計入用量。沒有符合時效的沿線通報時回 `summary.state: review`，保留道路建議而不稱路況已確認。
 
 ## 已查核但未作為自動避讓來源
 

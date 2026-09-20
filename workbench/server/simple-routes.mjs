@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { performance } from 'node:perf_hooks';
 import { LocalJevProvider, runCircuit } from '../../dist/index.js';
 import { checkLocalRequest, readApiBody } from './api.mjs';
-import { createRouteEventsProvider, filterEventsNearRoute, pointToRouteDistanceMeters } from './route-events.mjs';
+import { createRouteEventsProvider, filterEventsNearRoute, pointToRouteDistanceMeters, classifyEventFreshness, projectCurrentEventFeed, CURRENT_EVENT_MAX_AGE_SECONDS } from './route-events.mjs';
 
 const OSRM = 'https://router.project-osrm.org';
 const PHOTON = 'https://photon.komoot.io';
@@ -80,10 +80,9 @@ function eventInWindow(event, now) {
   return Number.isFinite(start) && Number.isFinite(end) && start <= now && now < end;
 }
 function eventEligible(event, now) {
-  const updated = Date.parse(event.updatedAt);
   const start = Date.parse(event.startAt); const end = Date.parse(event.endAt);
   return event.freshness === 'recent' && event.locationQuality === 'reported_point' && ['reported', 'synthetic'].includes(event.credibility)
-    && Number.isFinite(updated) && now - updated >= -300_000 && now - updated <= 6 * 3600_000
+    && classifyEventFreshness(event.updatedAt, now).reason === 'current'
     && !(Number.isFinite(start) && start > now) && !(Number.isFinite(end) && end <= now);
 }
 function semanticCircuit() {
@@ -127,13 +126,13 @@ export function createSimpleRoutesService(options = {}) {
   const searchSlot = limiter(now, sleep), mapSlot = limiter(now, sleep);
   const health = options.health ?? (async signal => { try { const value = await requestJson(fetcher, `${LOCALJEV}/ready`, { signal, timeoutMs: 1500 }); return { available: (value.ready === true || value.status === 'ready') && value.ready !== false && value.available !== false, model: 'localjev-0.2', upstreamModel: value.upstreamModel ?? value.upstream_model }; } catch { return { available: false, model: 'localjev-0.2' }; } });
   return {
-    config() { return { presets: clone(PRESETS), defaults: { origin: clone(PRESETS[0]), destination: clone(PRESETS[1]) }, sources: { maps: { provider: 'osrm', label: 'OpenStreetMap 道路 · 不含即時車流', traffic: false }, events: eventsProvider.health(), search: { provider: 'photon', publicLookupEnabled: true, label: 'Photon / OpenStreetMap 地點查詢' }, semantic: { provider: 'localjev', label: 'LocalJev · 僅本機，依需要檢查就緒狀態', calibrated: false } }, limits: { bounds: BOUNDS, maxRoutes: 3, maxNewSemanticEvents: 3, refreshSeconds: 120, maxAutoRefreshes: 5, searchManualOnly: true } }; },
+    config() { return { presets: clone(PRESETS), defaults: { origin: clone(PRESETS[0]), destination: clone(PRESETS[1]) }, sources: { maps: { provider: 'osrm', label: 'OpenStreetMap 道路 · 不含即時車流', traffic: false }, events: eventsProvider.health(), search: { provider: 'photon', publicLookupEnabled: true, label: 'Photon / OpenStreetMap 地點查詢' }, semantic: { provider: 'localjev', label: 'LocalJev · 僅本機，依需要檢查就緒狀態', calibrated: false } }, limits: { bounds: BOUNDS, maxRoutes: 3, maxNewSemanticEvents: 3, currentEventMaxAgeSeconds: CURRENT_EVENT_MAX_AGE_SECONDS, refreshSeconds: 120, maxAutoRefreshes: 5, searchManualOnly: true } }; },
     async search(body, signal) {
       fields(body, ['query']); requireValue(typeof body.query === 'string' && body.query.trim().length >= 2 && body.query.length <= 160, '請輸入 2–160 字地點名稱。');
       const query = body.query.trim(); const key = query.normalize('NFKC').toLowerCase(); const preset = PRESETS.filter(p => p.name.replaceAll(' ', '').includes(query.replaceAll(' ', '')));
       if (preset.length) return { places: clone(preset), provenance: { provider: 'presets', label: '台北公開地標', cached: false }, metrics: { requests: 0 } };
       const cached = searchCache.get(key);
-      if (cached && now() - cached.savedAt < 86_400_000) return { ...clone(cached.value), provenance: { ...cached.value.provenance, cached: true }, metrics: { requests: 0 } };
+      if (cached && now() >= cached.savedAt && now() - cached.savedAt < 86_400_000) return { ...clone(cached.value), provenance: { ...cached.value.provenance, cached: true }, metrics: { requests: 0 } };
       await searchSlot(signal);
       const url = new URL('/api/', photonOrigin); url.search = new URLSearchParams({ q: query, limit: '5', bbox: `${BOUNDS.minLng},${BOUNDS.minLat},${BOUNDS.maxLng},${BOUNDS.maxLat}`, countrycode: 'TW', lat: '25.05', lon: '121.55' }).toString();
       let data; try { data = await requestJson(fetcher, url, { signal }); } catch (e) { e.metrics = { searchRequests: 1 }; throw e; }
@@ -150,7 +149,7 @@ export function createSimpleRoutesService(options = {}) {
       const metrics = { mapRequests: 0, eventRequests: 0, modelRequests: 0, modelQuestions: 0, cachedSemantic: 0, elapsedMs: 0 };
       const key = hash([origin.lat, origin.lng, destination.lat, destination.lng]); const cached = routeCache.get(key); let routes, mapsProvenance;
       try {
-        if (cached && now() - cached.savedAt < 60_000) { routes = clone(cached.routes); mapsProvenance = { ...cached.provenance, cached: true }; }
+        if (cached && now() >= cached.savedAt && now() - cached.savedAt < 60_000) { routes = clone(cached.routes); mapsProvenance = { ...cached.provenance, cached: true }; }
         else {
           await mapSlot(signal); metrics.mapRequests++;
           const url = `${OSRM}/route/v1/driving/${origin.lng},${origin.lat};${destination.lng},${destination.lat}?alternatives=3&geometries=geojson&overview=full&steps=true`;
@@ -167,6 +166,9 @@ export function createSimpleRoutesService(options = {}) {
       let feed;
       try { feed = mode === 'demo' ? demonstration(routes, now()) : await eventsProvider.fetch({ signal }); }
       catch { feed = { status: 'unavailable', events: [], provenance: { provider: 'pbs', status: 'unavailable' }, warnings: ['事件來源暫時無法取得。'], metrics: { requests: 1 } }; }
+      requireValue(!signal?.aborted, '請求已取消。', 499);
+      // Recheck injected providers too; fetchedAt and a provider's `recent` label cannot renew old reports.
+      feed = projectCurrentEventFeed(feed, now());
       metrics.eventRequests = feed.metrics?.requests ?? 0;
       const near = new Map(); let uncertainLocation = 0;
       for (const route of routes) {
@@ -175,9 +177,10 @@ export function createSimpleRoutesService(options = {}) {
         for (const event of filtered.events) { if (!near.has(event.id) || event.distanceMeters < near.get(event.id).distanceMeters) near.set(event.id, event); }
       }
       const candidates = [...near.values()].sort((a, b) => a.distanceMeters - b.distanceMeters).slice(0, 20);
-      const events = []; let status; let newCalls = 0; let semanticFailed = false;
+      let events = []; let status; let newCalls = 0; let semanticFailed = false;
       for (const candidate of candidates) {
         requireValue(!signal?.aborted, '請求已取消。', 499);
+        if (classifyEventFreshness(candidate.updatedAt, now()).reason !== 'current') continue;
         const nearest = routes.map(route => ({ route, distance: pointToRouteDistanceMeters([candidate.lng, candidate.lat], route.coordinates) })).sort((a, b) => a.distance - b.distance)[0].route;
         const event = { ...clone(candidate), matchedRouteId: nearest.id, truth: 'UNKNOWN', status: 'review', reason: '保留待確認，沒有用缺失資料判斷道路暢通。' };
         const eligible = eventEligible(event, now());
@@ -188,7 +191,8 @@ export function createSimpleRoutesService(options = {}) {
           // ageMinutes/fetchedAt are observations, not changed event content; exclude them from semantic dedupe.
           const cacheKey = hash({ version: 3, event: Object.fromEntries(['id', 'title', 'text', 'lat', 'lng', 'startAt', 'endAt', 'updatedAt', 'sourceUrl', 'direction', 'road', 'credibility', 'locationQuality'].map(k => [k, candidate[k]])), origin, destination, nearest: { id: nearest.id, coordinates: nearest.coordinates, roadNames: nearest.roadNames }, model: status.model, upstreamModel: status.upstreamModel });
           const prior = semanticCache.get(cacheKey);
-          if (prior && now() - prior.savedAt < 300_000) { Object.assign(event, clone(prior.value)); metrics.cachedSemantic++; }
+          if (!eventEligible(event, now())) event.reason = '事件在檢查期間已超過時效，未送交模型。';
+          else if (prior && now() >= prior.savedAt && now() - prior.savedAt < 300_000) { Object.assign(event, clone(prior.value)); metrics.cachedSemantic++; }
           else if (!status.available || semanticFailed) event.reason = 'LocalJev 暫時不可用，保留原建議路線並提示確認；未改用雲端。';
           else if (newCalls >= 3 || now() >= deadline - 1000) event.reason = '本次判斷量已達上限，其餘事件保留待確認。';
           else {
@@ -214,11 +218,21 @@ export function createSimpleRoutesService(options = {}) {
         if (eligible && validWindow && event.truth === 'TRUE' && overlapping.some(route => route.id === nearest.id)) nearest.affectedEventIds.push(event.id);
         events.push(event);
       }
-      const uncertain = feed.status !== 'available' || uncertainLocation > 0 || near.size > 20 || events.some(e => e.truth === 'UNKNOWN' || e.ambiguousRouteMatch || (e.truth === 'TRUE' && !eventInWindow(e, now())));
+      requireValue(!signal?.aborted, '請求已取消。', 499);
+      // A model call can cross the display cutoff. Remove expired results before route selection or return.
+      feed = projectCurrentEventFeed(feed, now());
+      const currentById = new Map(feed.events.map(event => [event.id, event]));
+      const expiredDuringEvaluation = [...near.keys()].filter(id => !currentById.has(id)).length;
+      events = events.filter(event => currentById.has(event.id)).map(event => ({ ...event, ageMinutes: currentById.get(event.id).ageMinutes }));
+      const currentNearbyCount = [...near.keys()].filter(id => currentById.has(id)).length;
+      for (const route of routes) route.affectedEventIds = route.affectedEventIds.filter(id => currentById.has(id));
+      metrics.nearbyEvents = currentNearbyCount; metrics.omittedEvents = Math.max(0, currentNearbyCount - events.length);
+      const uncertain = feed.status !== 'available' || currentNearbyCount === 0 || expiredDuringEvaluation > 0 || uncertainLocation > 0 || metrics.omittedEvents > 0 || events.some(e => e.truth === 'UNKNOWN' || e.ambiguousRouteMatch || (e.truth === 'TRUE' && !eventInWindow(e, now())));
       const baseline = routes[0]; const best = [...routes].sort((a, b) => a.affectedEventIds.length - b.affectedEventIds.length || a.durationSeconds - b.durationSeconds)[0];
       let selected = baseline; let state = uncertain ? 'review' : 'ready';
       let title = '路線已備妥'; let detail = '已檢查公開事件。道路估時不含即時車流，也無法保證現場沒有未回報事件。';
       if (feed.status !== 'available') { title = '路線已備妥，事件待確認'; detail = '暫時無法取得公開事件，沿用道路服务原建議；沒有把來源失敗當成道路暢通。'; }
+      else if (currentNearbyCount === 0) { title = '路線已備妥，沒有符合時效的沿線通報'; detail = '目前沒有來源更新在 15 分鐘內的沿線通報；過期、時間不明與未來時間未列入。這不代表沒有事故、管制或道路暢通。'; }
       else if (uncertain) { title = '路線已備妥，部分事件待確認'; detail = '公開事件的位置、有效期間或語意資訊不足，保留原路線建議。'; }
       if (baseline.affectedEventIds.length && best.affectedEventIds.length === 0 && !uncertain) {
         selected = best; state = 'adjusted'; title = mode === 'demo' ? '示範：已切換替代路線' : '已選擇較少接近有效事件的路線';
@@ -226,8 +240,9 @@ export function createSimpleRoutesService(options = {}) {
       } else if (baseline.affectedEventIds.length) { state = 'review'; title = '尚無法確認合適的替代路線'; detail = '候選路線仍受事件影響，或其他資訊尚不確定。保留原路線供查看，並不代表可以通行。'; }
       if (mode === 'demo' && state !== 'adjusted') detail = `示範模式：合成事件與固定語意訊號，未呼叫模型。${detail}`;
       for (const route of routes) { route.selected = route.id === selected.id; route.reason = route.selected ? state === 'adjusted' ? '邏輯閘建議：已取得候選中接近有效事件較少' : '保留道路服務原始建議' : `候選路線 · ${route.affectedEventIds.length} 則通過檢查的附近事件`; }
-      metrics.elapsedMs = performance.now() - started; metrics.nearbyEvents = near.size; metrics.omittedEvents = Math.max(0, near.size - 20);
-      return { origin, destination, routes, events, summary: { title, detail, state }, provenance: { mode, maps: mapsProvenance, events: { ...feed.provenance, status: feed.status }, semantic: { provider: mode === 'demo' ? 'fixture' : 'localjev', calibrated: false, ...(status ? { available: status.available, upstreamModel: status.upstreamModel } : {}) } }, warnings: [...(feed.warnings ?? []), ...(metrics.omittedEvents ? [`尚有 ${metrics.omittedEvents} 則附近事件未展開檢查，保留待確認。`] : [])], metrics };
+      metrics.elapsedMs = performance.now() - started;
+      return { origin, destination, routes, events, summary: { title, detail, state }, provenance: { mode, maps: mapsProvenance, events: { ...feed.provenance, status: feed.status,
+        routeFreshness: { scope: 'candidate_routes', evaluatedAt: feed.provenance.freshness.evaluatedAt, maxAgeSeconds: CURRENT_EVENT_MAX_AGE_SECONDS, eligibleCount: currentNearbyCount, displayedCount: events.length, omittedCount: metrics.omittedEvents, expiredDuringEvaluationCount: expiredDuringEvaluation } }, semantic: { provider: mode === 'demo' ? 'fixture' : 'localjev', calibrated: false, ...(status ? { available: status.available, upstreamModel: status.upstreamModel } : {}) } }, warnings: [...(feed.warnings ?? []), ...(metrics.omittedEvents ? [`尚有 ${metrics.omittedEvents} 則附近事件未展開檢查，保留待確認。`] : [])], metrics };
     },
   };
 }

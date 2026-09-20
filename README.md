@@ -1,6 +1,8 @@
 # jev-gates
 
-**JEV Maps:** choose an origin and destination at `/delivery` in Studio. A full-screen map combines OSRM road alternatives, manual Photon place search and automatically fetched public police traffic reports; uncertain reports remain visible as unverified. [Route guide](docs/simple-routes.md). The editable six-stop, four-policy research experiment remains at `/delivery/lab`. OSRM is not live traffic and demo results do not prove savings. [Experiment guide](docs/delivery-experiment.md).
+**Bus arrivals:** `/delivery/bus` offers Taipei Main Station, City Hall and Palace Museum examples. Official public ETA snapshots pass deterministic freshness, station and direction gates before display; expired numbers disappear even with auto-refresh paused. Snapshot freshness is not vehicle GPS freshness or arrival accuracy. [Bus guide](docs/bus-arrivals.md).
+
+**JEV Maps:** choose an origin and destination at `/delivery` in Studio. A full-screen map combines OSRM road alternatives, manual Photon place search and automatically fetched public police traffic reports; only reports updated within 15 minutes remain eligible, with uncertain locations marked unverified. Nearby official Taipei road-speed observations require a source snapshot within 120 seconds; they are 5-minute smoothed averages and do not modify the OSRM ETA. [Route guide](docs/simple-routes.md). The editable six-stop, four-policy research experiment remains at `/delivery/lab`. OSRM is not live traffic and demo results do not prove savings. [Experiment guide](docs/delivery-experiment.md).
 
 **New: JEV Studio** — a local interactive workbench with four synthetic scenarios, editable semantic gates and branches, LocalJev inference, and an Ollama language bridge. Run `npm ci`, `npm ci --prefix workbench`, then `npm run studio:dev` (Node 22.12+), and open `http://127.0.0.1:3088`. [Studio guide (繁體中文)](docs/studio.md). Fixture results do not establish real JEV accuracy or AGI capabilities.
 

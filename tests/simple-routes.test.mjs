@@ -50,6 +50,56 @@ test('live missing feed or incomplete event validity preserves baseline and UNKN
   assert.equal(unknownTime.events[0].truth, 'TRUE'); assert.equal(unknownTime.events[0].status, 'review'); assert.match(unknownTime.events[0].reason, /結束時間/);
   assert.equal(unknownTime.summary.state, 'review'); assert.equal(unknownTime.routes[0].selected, true);
 });
+test('stale, unknown and future source updates are excluded before route display, health or model work', async () => {
+  const events = [
+    { ...liveEvent('yesterday'), updatedAt: new Date(NOW - 86400_000).toISOString() },
+    { ...liveEvent('stale'), updatedAt: new Date(NOW - 900_001).toISOString() },
+    { ...liveEvent('future'), updatedAt: new Date(NOW + 1).toISOString() },
+    { ...liveEvent('unknown'), updatedAt: null },
+  ];
+  const result = await service({ eventsProvider: eventsProvider(events), health: () => { throw new Error('health must not run'); }, semantic: () => { throw new Error('model must not run'); } }).plan({ origin, destination });
+  assert.deepEqual(result.events, []); assert.equal(result.metrics.modelRequests, 0); assert.equal(result.summary.state, 'review');
+  assert.match(result.summary.title, /沒有符合時效/); assert.match(result.summary.detail, /不代表/);
+  assert.deepEqual(result.provenance.events.freshness.excluded, { stale: 2, unknown: 1, future: 1, total: 4 });
+  assert.equal(result.provenance.events.routeFreshness.eligibleCount, 0);
+});
+test('stale history cannot consume the display or model quota ahead of a recent event', async () => {
+  const events = [...Array.from({ length: 30 }, (_, i) => ({ ...liveEvent(`old-${i}`), updatedAt: new Date(NOW - 86400_000).toISOString() })), liveEvent('current')];
+  const result = await service({ eventsProvider: eventsProvider(events), semantic: truth('UNKNOWN') }).plan({ origin, destination });
+  assert.deepEqual(result.events.map(event => event.id), ['current']); assert.equal(result.events[0].truth, 'UNKNOWN');
+  assert.equal(result.metrics.modelRequests, 1); assert.equal(result.metrics.omittedEvents, 0);
+  assert.equal(result.provenance.events.freshness.excluded.stale, 30); assert.equal(result.provenance.events.freshness.scope, 'source_feed');
+  assert.equal(result.provenance.events.routeFreshness.scope, 'candidate_routes');
+});
+test('event expiry while a model runs removes its result and affected route IDs before response', async () => {
+  let clock = NOW;
+  const result = await service({ now: () => clock, eventsProvider: eventsProvider([{ ...liveEvent(), updatedAt: new Date(NOW - 899_000).toISOString() }]), semantic: async (_input, config) => {
+    config.onRequest(2); clock += 1001; return { truth: 'TRUE', model: 'test' };
+  } }).plan({ origin, destination });
+  assert.deepEqual(result.events, []); assert.equal(result.metrics.modelRequests, 1);
+  assert.equal(result.routes[0].selected, true); assert.ok(result.routes.every(route => route.affectedEventIds.length === 0));
+  assert.equal(result.summary.state, 'review'); assert.equal(result.provenance.events.freshness.excluded.stale, 1);
+  assert.equal(result.provenance.events.routeFreshness.expiredDuringEvaluationCount, 1);
+});
+test('event expiry during readiness skips inference and never returns the now-stale report', async () => {
+  let clock = NOW, inferred = 0;
+  const result = await service({ now: () => clock, eventsProvider: eventsProvider([{ ...liveEvent(), updatedAt: new Date(NOW - 899_000).toISOString() }]),
+    health: async () => { clock += 1001; return { available: true }; }, semantic: () => { inferred++; throw new Error('must not infer'); },
+  }).plan({ origin, destination });
+  assert.equal(inferred, 0); assert.equal(result.metrics.modelRequests, 0); assert.deepEqual(result.events, []);
+});
+test('a cached semantic answer cannot keep an event current beyond the source cutoff', async () => {
+  let clock = NOW, inferred = 0;
+  const s = service({ now: () => clock, eventsProvider: eventsProvider([{ ...liveEvent(), updatedAt: new Date(NOW - 899_000).toISOString() }]), semantic: async (_input, config) => { inferred++; config.onRequest(2); return { truth: 'TRUE' }; } });
+  const first = await s.plan({ origin, destination }); assert.equal(first.events.length, 1); assert.equal(inferred, 1);
+  clock += 1001; const next = await s.plan({ origin, destination });
+  assert.deepEqual(next.events, []); assert.equal(inferred, 1); assert.equal(next.metrics.cachedSemantic, 0); assert.equal(next.summary.state, 'review');
+});
+test('an empty valid source feed stays review and does not promise clear roads', async () => {
+  const result = await service().plan({ origin, destination });
+  assert.equal(result.provenance.events.status, 'available'); assert.equal(result.provenance.events.freshness.status, 'no_recent_events');
+  assert.equal(result.summary.state, 'review'); assert.match(result.summary.detail, /不代表/);
+});
 test('precise current event and TRUE select only a less affected acquired route', async () => {
   const value = await service({ eventsProvider: eventsProvider([liveEvent()]), semantic: truth('TRUE') }).plan({ origin, destination });
   assert.equal(value.summary.state, 'adjusted'); assert.equal(value.routes[1].selected, true); assert.deepEqual(value.routes[1].coordinates, alternateCoordinates);

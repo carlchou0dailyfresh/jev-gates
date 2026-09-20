@@ -174,4 +174,8 @@ node examples/controller.mjs
 
 Studio 的 `/delivery` 已改成滿版地圖：只選起終點即可規劃，手動搜尋 Photon 地點、自動抓取警廣公開事件，再以程式與 LocalJev 檢查沿線影響。事件不確定時保留原路線，不宣稱已避開封路。通報與判斷細節收在側面，見[簡化路線手冊](docs/simple-routes.md)。
 
+新增 `/delivery/bus` 公車候車範例：台北車站、市政府站與故宮，查詢官方站牌／站址與路線方向。來源快照必須在120秒內、站牌方向符合且預估有效，才顯示官方到站數字；即使暫停自動更新，舊數字仍會到期隱藏。這不是車輛GPS時效或精確到站保證。詳見[公車說明](docs/bus-arrivals.md)。
+
+汽車地圖只保留15分鐘內更新的警廣通報；另提供來源交換時間120秒內的官方附近路段速度觀測。道路速度為5分鐘平滑平均，尚未用於修改OSRM估時。詳見[道路速度說明](docs/traffic-observations.md)。
+
 原台北六站汽車配送保留在 `/delivery/lab`：可編輯站點、容量與時間窗，取得 OSRM 道路資料，比較每次重算、規則去重、單層 JEV 與雙判斷 AND。提供模型與求解耗時、建議刷新次數及可調單價；少重算不等於已證明省錢。OSRM 不是即時車流，Google 路況需另設伺服器金鑰。詳見[實驗說明](docs/delivery-experiment.md)與[來源限制](docs/delivery-sources.md)。
