@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "1.0",
+  "createdAt": "2026-09-19T17:36:28.437Z",
+  "status": "passed",
+  "browser": "153.0.8010.12",
+  "device": {
+    "platform": "darwin",
+    "architecture": "arm64",
+    "cpu": "Apple M4 Max"
+  },
+  "checks": [
+    "research TRUE/FALSE/UNKNOWN and inspector match saved core signals",
+    "UI export → integrity verification → offline zero-fetch replay → next/back",
+    "invalid DAG rejected immediately; dialog returns keyboard focus",
+    "policy branch preserves original model response and displays comparison",
+    "sandbox timeout → pending → destination recovery; reload does not duplicate action",
+    "planning constraint change recomputes feasibility and keeps parent plan",
+    "mini-world hidden-observation path runs end-to-end",
+    "360/768/1440 no horizontal overflow; mobile paged inspector and focus return",
+    "20/100/256 node load and search measurements captured without disabling core validation",
+    "damaged import rejected; valid versioned run imported successfully"
+  ],
+  "viewports": [
+    {
+      "width": 360,
+      "contentWidth": 360,
+      "reducedMotion": true
+    },
+    {
+      "width": 768,
+      "contentWidth": 768,
+      "reducedMotion": true
+    },
+    {
+      "width": 1440,
+      "contentWidth": 1440,
+      "reducedMotion": true
+    }
+  ],
+  "performance": [
+    {
+      "nodes": 20,
+      "loadAndSearchMs": 86,
+      "displayedMeasurement": "20 節點載入到兩個畫面更新：約 51.5 ms；Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36；視窗 1440×900。包含 API 與 UI，非引擎基準。"
+    },
+    {
+      "nodes": 100,
+      "loadAndSearchMs": 126,
+      "displayedMeasurement": "100 節點載入到兩個畫面更新：約 50.6 ms；Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36；視窗 1440×900。包含 API 與 UI，非引擎基準。"
+    },
+    {
+      "nodes": 256,
+      "loadAndSearchMs": 207,
+      "displayedMeasurement": "256 節點載入到兩個畫面更新：約 66.7 ms；Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36；視窗 1440×900。包含 API 與 UI，非引擎基準。"
+    }
+  ],
+  "limitations": [
+    "Automated Chromium checks, not a manual screen-reader audit.",
+    "Performance is a single local browser observation, not a statistical benchmark.",
+    "All UI scenario executions in this suite are fixtures; live model evidence is separate."
+  ]
+}

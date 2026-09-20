@@ -51,7 +51,15 @@ export function validateQuestions(questions: Record<string, Question>, limits: L
   if (outcomes > limits.outcomes) throw new Error(`Provider request exceeds ${limits.outcomes} total outcomes`);
 }
 
-class TransportError extends Error {}
+/** Safe structured transport diagnosis; never stores response text or credentials. */
+export class ProviderFailure extends Error {
+  constructor(message: string, readonly code: 'http_error' | 'timeout' | 'aborted' | 'invalid_response' | 'response_too_large' | 'invalid_json' | 'transport_error', readonly httpStatus?: number) { super(message); }
+}
+class TransportError extends ProviderFailure {
+  constructor(message: string, status?: number) {
+    super(message, status !== undefined ? 'http_error' : message.includes('exceeds') ? 'response_too_large' : message.includes('JSON') || message.includes('empty') ? 'invalid_json' : message.includes('timed out') ? 'timeout' : message.includes('aborted') ? 'aborted' : 'transport_error', status);
+  }
+}
 
 async function readJson(response: Response): Promise<unknown> {
   const length = response.headers.get('content-length');
@@ -123,19 +131,30 @@ abstract class HttpProvider implements Provider {
       const response = await fetch(this.endpoint, { method: 'POST', headers, body, signal: controller.signal, redirect: 'error' });
       if (!response.ok) {
         await response.body?.cancel();
-        throw new TransportError(`Provider HTTP ${response.status}`);
+        throw new TransportError(`Provider HTTP ${response.status}`, response.status);
       }
       const raw = await readJson(response);
+      // Retain the complete JSON body separately from validated semantic values.
+      // The key lives only in request headers; redact it defensively if a server echoes it.
+      const capture = (value: unknown): Json => {
+        if (typeof value === 'string') return this.apiKey ? value.split(this.apiKey).join('[REDACTED]') : value;
+        if (Array.isArray(value)) return value.map(capture);
+        if (value !== null && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([key, item]) => [this.apiKey ? key.split(this.apiKey).join('[REDACTED]') : key, capture(item)]));
+        return value as Json;
+      };
+      const capturedResponse = capture(raw);
+      options.onTransport?.({ request: capture(JSON.parse(body)), response: capturedResponse });
+      if (this.apiKey && JSON.stringify(capturedResponse) !== JSON.stringify(raw)) throw new ProviderFailure('Provider response contained credential material', 'invalid_response');
       if (timedOut) throw new TransportError('Provider request timed out');
       if (options.signal?.aborted) throw new TransportError('Provider request aborted');
       // Validation happens outside catch to keep its safe, specific diagnostics.
       return validateResponse(raw, questions);
     } catch (error) {
-      if (timedOut) throw new Error('Provider request timed out');
-      if (options.signal?.aborted) throw new Error('Provider request aborted');
-      if (error instanceof TransportError) throw new Error(error.message);
-      if (error instanceof Error && error.message.startsWith('Invalid provider response:')) throw error;
-      throw new Error('Provider transport failed');
+      if (timedOut) throw new ProviderFailure('Provider request timed out', 'timeout');
+      if (options.signal?.aborted) throw new ProviderFailure('Provider request aborted', 'aborted');
+      if (error instanceof ProviderFailure) throw error;
+      if (error instanceof Error && error.message.startsWith('Invalid provider response:')) throw new ProviderFailure(error.message, 'invalid_response');
+      throw new ProviderFailure('Provider transport failed', 'transport_error');
     } finally {
       clearTimeout(timer);
       options.signal?.removeEventListener('abort', abort);

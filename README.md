@@ -1,5 +1,11 @@
 # jev-gates
 
+**Bus arrivals:** `/delivery/bus` offers Taipei Main Station, City Hall and Palace Museum examples. Official public ETA snapshots pass deterministic freshness, station and direction gates before display; expired numbers disappear even with auto-refresh paused. Snapshot freshness is not vehicle GPS freshness or arrival accuracy. [Bus guide](docs/bus-arrivals.md).
+
+**JEV Maps:** choose an origin and destination at `/delivery` in Studio. A full-screen map combines OSRM road alternatives, manual Photon place search and automatically fetched public police traffic reports; only reports updated within 15 minutes remain eligible, with uncertain locations marked unverified. Nearby official Taipei road-speed observations require a source snapshot within 120 seconds; they are 5-minute smoothed averages and do not modify the OSRM ETA. [Route guide](docs/simple-routes.md). The editable six-stop, four-policy research experiment remains at `/delivery/lab`. OSRM is not live traffic and demo results do not prove savings. [Experiment guide](docs/delivery-experiment.md).
+
+**New: JEV Studio** — a local interactive workbench with four synthetic scenarios, editable semantic gates and branches, LocalJev inference, and an Ollama language bridge. Run `npm ci`, `npm ci --prefix workbench`, then `npm run studio:dev` (Node 22.12+), and open `http://127.0.0.1:3088`. [Studio guide (繁體中文)](docs/studio.md). Fixture results do not establish real JEV accuracy or AGI capabilities.
+
 **English** · [繁體中文](README.zh-TW.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Português (Brasil)](README.pt-BR.md)
 
 **Build complex decisions by composing small semantic judgments.**
@@ -24,6 +30,27 @@ flowchart LR
     O --> C[Application controller]
     C --> V[Tool execution and result verification]
 ```
+
+## 本機語意研究工作台
+
+需要 Node.js 22.12+（或 24+）。在 repository 根目錄執行：
+
+```sh
+npm ci
+npm run workbench
+```
+
+開啟 `http://127.0.0.1:4317`。四個繁體中文情境不需金鑰即可用 fixture 操作；UI 依賴在 `ui/`，核心函式庫沒有 React 執行期依賴。
+
+```sh
+npm run research:demo
+node dist/cli.js verify-report .jev-runs/<runId>.json
+node dist/cli.js replay .jev-runs/<runId>.json
+npm run research:eval
+npm run research:smoke  # 一次既有本機 LocalJev 推論，不自動改用雲端
+```
+
+安裝已打包套件後，也可用 `jev-gates workbench` 啟動隨附介面。完整操作、資料保存、預算與研究界線見 [工作台操作手冊](docs/workbench.md)、[情境導覽](docs/scenarios.md)、[評測協議](docs/eval-protocol.md)。fixture、工作流程完成與真實模型品質分開呈現；本工作台沒有已驗證 AGI 的主張。
 
 ## Run the offline demo
 

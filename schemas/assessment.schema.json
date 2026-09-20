@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jev-gates.local/schemas/1.0/assessment.schema.json",
+  "title": "Assessment",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "status": {
+      "enum": [
+        "passed",
+        "failed",
+        "not_evaluated"
+      ]
+    },
+    "labelsVersion": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "splitVersion": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "applicableData": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": {
+        "type": [
+          "number",
+          "null"
+        ]
+      }
+    },
+    "sampleCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "independentReview": {
+      "type": "boolean"
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "status",
+    "labelsVersion",
+    "splitVersion",
+    "applicableData",
+    "metrics",
+    "sampleCount",
+    "independentReview",
+    "notes"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "passed",
+              "failed"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "labelsVersion": {
+            "type": "string",
+            "minLength": 1
+          },
+          "splitVersion": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sampleCount": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "version": "eval-v1.1",
+  "frozenAt": "2026-09-19T17:38:10.000Z",
+  "supersedes": "eval-v1",
+  "reason": "timestamp_metadata_correction",
+  "performanceTuning": false,
+  "language": "zh-TW",
+  "maxCalls": 8,
+  "gateTimeoutMs": 5000,
+  "minimumCoverage": 0.7,
+  "maximumKnownErrorRate": 0.1,
+  "minimumCasesPerStratum": 30,
+  "decision": "experimental-until-live-heldout",
+  "labelsVersion": "independent-world-executor-v1",
+  "splitVersion": "family-isolated-v1",
+  "calibration": "choice-0.60-margin-0.15-not-empirically-calibrated",
+  "protocolDigest": "1e38d6e63c636b129dc7bc777abe7b0b6a75a029c6d46c83a5ba926cd842448c"
+}

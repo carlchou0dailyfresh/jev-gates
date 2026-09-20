@@ -1,0 +1,1246 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jev-gates.local/schemas/1.0/run-artifact.schema.json",
+  "title": "RunArtifact",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "runId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "parentRunId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "changeReason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "scenarioId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "enum": [
+        "fixture",
+        "recorded-live",
+        "live-localjev",
+        "live-typesafe"
+      ]
+    },
+    "circuit": {
+      "$ref": "circuit.schema.json"
+    },
+    "input": {},
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "evidence-record.schema.json"
+      },
+      "maxItems": 4096
+    },
+    "model": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "type": "string",
+          "minLength": 1
+        },
+        "requestedModel": {
+          "type": "string",
+          "minLength": 1
+        },
+        "actualModels": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "upstreamModels": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "provider",
+        "requestedModel",
+        "actualModels",
+        "upstreamModels"
+      ],
+      "additionalProperties": false
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "sequence": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "type": {
+            "enum": [
+              "run_started",
+              "node_completed",
+              "provider_started",
+              "provider_completed",
+              "provider_failed",
+              "run_completed"
+            ]
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "nodeId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "requestDigest": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "signal": {
+            "type": "object",
+            "properties": {
+              "truth": {
+                "enum": [
+                  "TRUE",
+                  "FALSE",
+                  "UNKNOWN"
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              },
+              "answer": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "const": "noul"
+                      },
+                      "noul": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "noul"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "const": "choice"
+                      },
+                      "choice": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "probabilities": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1
+                        }
+                      },
+                      "confidence": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "choice",
+                      "probabilities",
+                      "confidence"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "const": "score"
+                      },
+                      "score": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "probabilities": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1
+                        }
+                      },
+                      "legend": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "confidence": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "score",
+                      "probabilities",
+                      "legend",
+                      "confidence"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            },
+            "required": [
+              "truth",
+              "reason"
+            ],
+            "additionalProperties": false
+          },
+          "detail": {}
+        },
+        "required": [
+          "sequence",
+          "type",
+          "at"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 5000
+    },
+    "result": {
+      "type": "object",
+      "properties": {
+        "circuit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "circuitDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "inputDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "status": {
+          "enum": [
+            "evaluated",
+            "abstained"
+          ]
+        },
+        "signals": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "truth": {
+                "enum": [
+                  "TRUE",
+                  "FALSE",
+                  "UNKNOWN"
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              },
+              "answer": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "const": "noul"
+                      },
+                      "noul": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "noul"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "const": "choice"
+                      },
+                      "choice": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "probabilities": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1
+                        }
+                      },
+                      "confidence": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "choice",
+                      "probabilities",
+                      "confidence"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "const": "score"
+                      },
+                      "score": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "probabilities": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1
+                        }
+                      },
+                      "legend": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "confidence": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "score",
+                      "probabilities",
+                      "legend",
+                      "confidence"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            },
+            "required": [
+              "truth",
+              "reason"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "outputs": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "truth": {
+                "enum": [
+                  "TRUE",
+                  "FALSE",
+                  "UNKNOWN"
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              },
+              "answer": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "const": "noul"
+                      },
+                      "noul": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "noul"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "const": "choice"
+                      },
+                      "choice": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "probabilities": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1
+                        }
+                      },
+                      "confidence": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "choice",
+                      "probabilities",
+                      "confidence"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "const": "score"
+                      },
+                      "score": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "probabilities": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1
+                        }
+                      },
+                      "legend": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "confidence": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "score",
+                      "probabilities",
+                      "legend",
+                      "confidence"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            },
+            "required": [
+              "truth",
+              "reason"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "kind": {
+                "enum": [
+                  "constant",
+                  "rule",
+                  "logic",
+                  "semantic"
+                ]
+              },
+              "signal": {
+                "type": "object",
+                "properties": {
+                  "truth": {
+                    "enum": [
+                      "TRUE",
+                      "FALSE",
+                      "UNKNOWN"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "answer": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "const": "noul"
+                          },
+                          "noul": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "noul"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "const": "choice"
+                          },
+                          "choice": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "probabilities": {
+                            "type": "object",
+                            "additionalProperties": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1
+                            }
+                          },
+                          "confidence": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "choice",
+                          "probabilities",
+                          "confidence"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "const": "score"
+                          },
+                          "score": {
+                            "type": "number",
+                            "minimum": 0
+                          },
+                          "probabilities": {
+                            "type": "object",
+                            "additionalProperties": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1
+                            }
+                          },
+                          "legend": {
+                            "type": "object",
+                            "additionalProperties": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          },
+                          "confidence": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "score",
+                          "probabilities",
+                          "legend",
+                          "confidence"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "truth",
+                  "reason"
+                ],
+                "additionalProperties": false
+              },
+              "elapsedMs": {
+                "type": "number",
+                "minimum": 0
+              },
+              "requestDigest": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            },
+            "required": [
+              "id",
+              "kind",
+              "signal",
+              "elapsedMs"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 256
+        },
+        "calls": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "provider": {
+                "type": "string",
+                "minLength": 1
+              },
+              "requestedModel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "model": {
+                "type": "string",
+                "minLength": 1
+              },
+              "upstreamModel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "questionIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              },
+              "requestDigest": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "elapsedMs": {
+                "type": "number",
+                "minimum": 0
+              },
+              "status": {
+                "enum": [
+                  "ok",
+                  "error"
+                ]
+              },
+              "error": {
+                "type": "string",
+                "minLength": 1
+              },
+              "usage": {
+                "type": "object",
+                "properties": {
+                  "input_tokens": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "output_tokens": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "input_tokens",
+                  "output_tokens"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "provider",
+              "requestedModel",
+              "questionIds",
+              "requestDigest",
+              "elapsedMs",
+              "status"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 1024
+        }
+      },
+      "required": [
+        "circuit",
+        "circuitDigest",
+        "inputDigest",
+        "status",
+        "signals",
+        "outputs",
+        "nodes",
+        "calls"
+      ],
+      "additionalProperties": false
+    },
+    "signals": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "decision-signal.schema.json"
+      }
+    },
+    "requests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "provider": {
+            "type": "string",
+            "minLength": 1
+          },
+          "requestedModel": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {},
+          "questions": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "noul"
+                    },
+                    "instructions": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "criteria": {
+                      "type": "object",
+                      "properties": {
+                        "true": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "false": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "instructions"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "choice"
+                    },
+                    "instructions": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "criteria": {
+                      "type": "object",
+                      "minProperties": 2,
+                      "maxProperties": 128,
+                      "additionalProperties": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "instructions",
+                    "criteria"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "score"
+                    },
+                    "instructions": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "criteria": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "minItems": 2,
+                      "maxItems": 10
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "instructions",
+                    "criteria"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "requestDigest": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "status": {
+            "enum": [
+              "ok",
+              "error"
+            ]
+          },
+          "response": {
+            "type": "object",
+            "properties": {
+              "model": {
+                "type": "string",
+                "minLength": 1
+              },
+              "answers": {
+                "type": "object",
+                "additionalProperties": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "const": "noul"
+                        },
+                        "noul": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "noul"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "const": "choice"
+                        },
+                        "choice": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "probabilities": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                          }
+                        },
+                        "confidence": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "choice",
+                        "probabilities",
+                        "confidence"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "const": "score"
+                        },
+                        "score": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "probabilities": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                          }
+                        },
+                        "legend": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "confidence": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "score",
+                        "probabilities",
+                        "legend",
+                        "confidence"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "usage": {
+                "type": "object",
+                "properties": {
+                  "input_tokens": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "output_tokens": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "input_tokens",
+                  "output_tokens"
+                ],
+                "additionalProperties": false
+              },
+              "upstreamModel": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "model",
+              "answers"
+            ],
+            "additionalProperties": false
+          },
+          "rawResponse": {},
+          "error": {
+            "type": "string",
+            "minLength": 1
+          },
+          "elapsedMs": {
+            "type": "number",
+            "minimum": 0
+          },
+          "provenance": {
+            "enum": [
+              "fixture",
+              "recorded-live",
+              "live-localjev",
+              "live-typesafe"
+            ]
+          },
+          "transport": {
+            "type": "object",
+            "properties": {
+              "request": {},
+              "response": {}
+            },
+            "required": [
+              "request",
+              "response"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "index",
+          "provider",
+          "requestedModel",
+          "state",
+          "questions",
+          "requestDigest",
+          "status",
+          "elapsedMs",
+          "provenance"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 1024
+    },
+    "budget": {
+      "type": "object",
+      "properties": {
+        "limits": {
+          "type": "object",
+          "properties": {
+            "maxCalls": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1024
+            },
+            "maxNodes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 256
+            },
+            "maxTimeMs": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 3600000
+            },
+            "gateTimeoutMs": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 300000
+            },
+            "maxTokens": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "maxCostUsd": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "maxCalls",
+            "maxNodes",
+            "maxTimeMs",
+            "gateTimeoutMs"
+          ],
+          "additionalProperties": false
+        },
+        "usage": {
+          "type": "object",
+          "properties": {
+            "calls": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "nodes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "elapsedMs": {
+              "type": "number",
+              "minimum": 0
+            },
+            "inputTokens": {
+              "oneOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "const": "unknown"
+                }
+              ]
+            },
+            "outputTokens": {
+              "oneOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "const": "unknown"
+                }
+              ]
+            },
+            "costUsd": {
+              "oneOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "const": "unknown"
+                }
+              ]
+            }
+          },
+          "required": [
+            "calls",
+            "nodes",
+            "elapsedMs",
+            "inputTokens",
+            "outputTokens",
+            "costUsd"
+          ],
+          "additionalProperties": false
+        },
+        "exhausted": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "limits",
+        "usage",
+        "exhausted"
+      ],
+      "additionalProperties": false
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "action-record.schema.json"
+      },
+      "maxItems": 4096
+    },
+    "assessment": {
+      "$ref": "assessment.schema.json"
+    },
+    "workflow": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "completed",
+            "cancelled",
+            "budget_exhausted"
+          ]
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "status",
+        "errors"
+      ],
+      "additionalProperties": false
+    },
+    "integrity": {
+      "type": "object",
+      "properties": {
+        "algorithm": {
+          "const": "sha256"
+        },
+        "digest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "algorithm",
+        "digest"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "runId",
+    "createdAt",
+    "mode",
+    "circuit",
+    "input",
+    "evidence",
+    "model",
+    "events",
+    "result",
+    "signals",
+    "requests",
+    "budget",
+    "actions",
+    "assessment",
+    "workflow",
+    "integrity"
+  ],
+  "additionalProperties": false,
+  "dependentRequired": {
+    "parentRunId": [
+      "changeReason"
+    ]
+  },
+  "$comment": "Runtime validates the canonical SHA-256 and all cross-object linkage, replays exact logic/policies without network, checks request/response/trace/event budget accounting. Hashes are not authenticity or scientific proof."
+}
