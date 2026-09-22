@@ -1,0 +1,24 @@
+{
+  "schema": "jev-medication-import-verification-v1",
+  "source_archive_sha256": "aa6d9a79739f13813c1dac99999557ddfd64d8811cc6b9e3cc99a840d6834122",
+  "original_hashed_files_checked": 7,
+  "execution_code_hashes_checked": 5,
+  "original_runner_offline_verify": {
+    "verified": true,
+    "rows": 16,
+    "live_successful_rows": 16
+  },
+  "independent_python_raw_response_and_metric_checks": "passed",
+  "new_model_calls": 0,
+  "tests": {
+    "new_import_review_tests": 5,
+    "passed": 5,
+    "failed": 0
+  },
+  "remote_ci": "not_yet_checked_at_review_creation",
+  "limitations": [
+    "Integrity checks do not authenticate remote hardware, model weights, or clinical validity.",
+    "Original startup metadata is outside the original run manifest; no host identity claim is made.",
+    "This evidence projection omits local environment data; it is not the original ZIP."
+  ]
+}

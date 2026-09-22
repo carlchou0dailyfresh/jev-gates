@@ -1,0 +1,72 @@
+{
+  "schema": "jev-medication-ab-review-v1",
+  "scope": "8 synthetic dev cases; one paired repetition",
+  "unique_cases": 8,
+  "case_arm_records": 16,
+  "pharmacist_reviewed_cases": 0,
+  "observations_sha256": "f9153338bf6665baafe92526e5e81da7f5b2a9ecf177a6a11ae86a75588ecd0f",
+  "arms": {
+    "A": {
+      "n": 8,
+      "raw_correct": 8,
+      "post_policy_correct": 8,
+      "emergency_n": 1,
+      "emergency_misses": 0,
+      "policy_route_changes": 0,
+      "mean_wall_ms": 4387.980307250001,
+      "median_wall_ms": 4351.015458,
+      "p50_nearest_rank_ms": 4322.894958000001,
+      "p95_nearest_rank_ms": 5583.607000000004,
+      "min_wall_ms": 3413.2333750000003,
+      "max_wall_ms": 5583.607000000004,
+      "input_tokens": 2463,
+      "output_tokens": 483,
+      "responses_with_valid_nonempty_citations": 0,
+      "citation_namespace_errors": 1,
+      "citation_error_case_ids": ["med-001"],
+      "drafts_without_any_han_character": 8,
+      "professional_factuality_score": null,
+      "cost_usd": null
+    },
+    "B": {
+      "n": 8,
+      "raw_correct": 8,
+      "post_policy_correct": 8,
+      "emergency_n": 1,
+      "emergency_misses": 0,
+      "policy_route_changes": 0,
+      "mean_wall_ms": 5754.78759925,
+      "median_wall_ms": 5592.258209000002,
+      "p50_nearest_rank_ms": 5537.973959000001,
+      "p95_nearest_rank_ms": 6773.647833000003,
+      "min_wall_ms": 4765.468999999999,
+      "max_wall_ms": 6773.647833000003,
+      "input_tokens": 4279,
+      "output_tokens": 506,
+      "responses_with_valid_nonempty_citations": 7,
+      "citation_namespace_errors": 0,
+      "citation_error_case_ids": [],
+      "drafts_without_any_han_character": 8,
+      "professional_factuality_score": null,
+      "cost_usd": null
+    }
+  },
+  "comparison": {
+    "observed_route_accuracy_difference_pp": 0.0,
+    "mean_wall_difference_ms": 1366.8072919999995,
+    "mean_wall_relative_increase_pct": 31.148893028113743,
+    "pairs_with_B_slower": 8,
+    "input_token_relative_increase_pct": 73.73122208688592,
+    "original_paired_bootstrap_ci95": [0, 0],
+    "bootstrap_interpretation": "All observed correctness differences are zero; [0,0] is a degenerate resampling result, NOT population equivalence.",
+    "generalizable_effect_interval": null
+  },
+  "claims": {
+    "clinical_accuracy_established": false,
+    "rag_superiority_established": false,
+    "laya_or_jev_evaluated": false,
+    "chinese_answer_quality_passed": false,
+    "all_drafts_clinically_safe": null,
+    "model_weights_independently_attested": false
+  }
+}
