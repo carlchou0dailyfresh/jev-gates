@@ -1,0 +1,89 @@
+{
+  "study": "medication-routing-v0.1",
+  "date": "2026-09-22",
+  "base_commit": "ee402cfebec4d619a4f4dfef481e3d4635c7aa9f",
+  "base_branch": "feat/research-validation-round",
+  "status": "engineering_validation_complete_live_comparison_blocked",
+  "runtime": {
+    "node": "22.16.0",
+    "python": "3.13.5"
+  },
+  "local_tests": {
+    "total": 47,
+    "passed": 46,
+    "failed": 0,
+    "skipped": 1,
+    "skipped_reason": "core integration requires full compiled repository; not available in local partial checkout",
+    "test_tap_sha256": "2c9bafa15836314b6c04ed0e8ce87e07b329b7bf01cefcd5427b744747ebfc20"
+  },
+  "python_worker": {
+    "syntax_compile": "passed",
+    "sdk_install_tested": false,
+    "checkpoint_load_tested": false,
+    "live_inference_tested": false
+  },
+  "fixture": {
+    "cases": 24,
+    "families": 24,
+    "dev_cases": 8,
+    "test_cases": 16,
+    "arms": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "case_arm_records": 120,
+    "virtual_provider_calls": 216,
+    "model_inferences": 0,
+    "per_arm_rows": {
+      "A": 24,
+      "B": 24,
+      "C": 24,
+      "D": 24,
+      "E": 24
+    },
+    "offline_verification": "passed",
+    "records_sha256": "6cbc863138cf1bb4243e1b15423c790c91ac19fa3c807ad898bca8abdd9a1023",
+    "manifest_sha256": "e4a72629e0e861d5bd1f95cad9c62dc2542c4f3a4ab33b8d94438b6ca20642e0",
+    "interpretation": "Constant INFO responses verify contracts only; no model performance comparison."
+  },
+  "live": {
+    "status": "blocked",
+    "successful_records": 0,
+    "model_calls": 0,
+    "exit_code": 2,
+    "blockers": [
+      "LLM_MODEL",
+      "OPENAI_API_KEY",
+      "TYPESAFE_API_KEY",
+      "JEV_MODEL",
+      "LAYA_CHECKPOINT (existing local multilingual checkpoint)"
+    ],
+    "arm_metrics": {
+      "A": null,
+      "B": null,
+      "C": null,
+      "D": null,
+      "E": null
+    }
+  },
+  "claims": {
+    "model_superiority_established": false,
+    "clinical_accuracy_measured": false,
+    "ocr_accuracy_measured": false,
+    "patient_data_used": false
+  },
+  "remote_ci": {
+    "status": "not_yet_verified_at_local_report_creation"
+  },
+  "code_hashes": {
+    "core.mjs": "51ca980465c61b3fe4759b0057863b5abbd879fb98c5b72752fbb89c7fe73414",
+    "data.mjs": "6210444536549041ddbee584e79930fc4ba2031a1360b64d76c2242c59a65f01",
+    "providers.mjs": "0afb827d74f733b4c43d7d9ef683eb84bc06fc9ca62e21f040c358fb51626726",
+    "run.mjs": "5544a34a2eac435b1ed4a935bc1f0dd2ddfd322f7faa3ad01b392c5f79282a46",
+    "laya_worker.py": "c68ff71f8377b09e3a6e070ae20f7780968969f7b52eefe549ee97203db2af14"
+  },
+  "evidence_note": "Complete local journals, manifests, test TAP and review sheets are included in the accompanying evidence ZIP. Regenerate with the documented CLI using a new output directory."
+}

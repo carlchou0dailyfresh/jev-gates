@@ -49,7 +49,8 @@
     "workbench/dist",
     "workbench/server",
     "workbench/scenarios.json",
-    "workbench/delivery-scenario.json"
+    "workbench/delivery-scenario.json",
+    "research/medication"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -70,7 +71,11 @@
     "studio:verify-report": "node workbench/server/research.mjs verify-report",
     "studio:replay": "node workbench/server/research.mjs replay",
     "delivery:demo": "npm run build && node workbench/server/delivery-research.mjs demo",
-    "delivery:verify": "node workbench/server/delivery-research.mjs verify"
+    "delivery:verify": "node workbench/server/delivery-research.mjs verify",
+    "medication:test": "npm run build && node --test tests/medication*.test.mjs",
+    "medication:fixture": "node research/medication/run.mjs --mode fixture",
+    "medication:live": "npm run build && node research/medication/run.mjs --mode live --allow-live",
+    "medication:verify": "node research/medication/run.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
